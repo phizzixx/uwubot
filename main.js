@@ -35,12 +35,16 @@ client.on('message', message =>{
         myRole = message.guild.roles.cache.find(role => role.name === "Horny");
         myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
         mentioned = message.guild.members.cache.get(uid)
-        if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
-            mentioned.roles.add(myRole)
-            mentioned.roles.add(myRole2)
-            message.channel.send('<@' + uid + '> has been jailed!');
+        if(!(message.member.roles.cache.find(r => r.name === "Sheriff"){
+            if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
+                mentioned.roles.add(myRole)
+                mentioned.roles.add(myRole2)
+                message.channel.send('<@' + uid + '> has been jailed!');
+            } else {
+                message.channel.send('<@' + uid + '> is already jailed!');
+            }
         } else {
-            message.channel.send('<@' + uid + '> is already jailed!');
+            message.reply('You can\'t do that! They\'re a sheriff!")
         }
     } else if ((mainCommand == 'free') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
         uid = message.mentions.users.first().id;
