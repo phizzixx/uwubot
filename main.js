@@ -44,7 +44,7 @@ client.on('message', message =>{
                 message.channel.send('<@' + uid + '> is already jailed!');
             }
         } else {
-            message.reply('You can\'t do that! They\'re a sheriff!")
+            message.reply('You can\'t do that! They\'re a sheriff!');
         }
     } else if ((mainCommand == 'free') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
         uid = message.mentions.users.first().id;
