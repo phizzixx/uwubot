@@ -35,7 +35,7 @@ client.on('message', message =>{
         myRole = message.guild.roles.cache.find(role => role.name === "Horny");
         myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
         mentioned = message.guild.members.cache.get(uid)
-        if(!(mentioned.roles.cache.find(r => r.name === "Sheriff"){
+        if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
             if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
                 mentioned.roles.add(myRole)
                 mentioned.roles.add(myRole2)
