@@ -1,13 +1,9 @@
 const Discord = require('discord.js');
 const uwufy = require('uwufy');
+const cheerio = require('cheerio');
+const request = require('request');
 
 const client = new Discord.Client();
-
-client.on('ready', () => {
-
-    console.log('I am ready!');
-
-});
 
 const prefix = '%';
 
@@ -29,7 +25,38 @@ client.on('message', message =>{
                 .then(message => message.channel.send(uwufy(message.content)))
                 .catch(console.error);
         }
+    } else if (command == 'monke') {
+        image(message);
     }
 })
 
+function image(message){
+    var options = {
+        url : "http://results.dogpile.com/serp?qc=images&q=" + "monkey",
+        method: "GET",
+        headers: {
+            "Accept": "text/html",
+            "User-Agent": "Chrome"
+        }
+    };
+
+    request(options, function(error, response, responseBody){
+        if (error) {
+            return;
+        }
+
+        $ = cheerio.load(responseBody);
+
+        var links = $(".image a.link");
+
+        var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
+
+        console.log(urls);
+        if(!urls.length){
+            return;
+        }
+
+        message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
+    });
+}
 client.login(process.env.BOT_TOKEN);
