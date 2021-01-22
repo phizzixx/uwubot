@@ -10,6 +10,7 @@ barrels = getRandomInt(6);
 escaping = false;
 ans = null;
 attempts = null;
+escaperID = null;
 
 client.once('ready', () =>{
     console.log('Bot is online!')
@@ -25,20 +26,24 @@ client.on('message', message =>{
     let mainCommand = splitCommand[0];
 
     if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
-        attempts--;
-        input = Number(mainCommand);
-        if(input == ans){
-            escaping = false;
-            myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
-            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-            message.member.roles.remove(myRole);
-            message.member.roles.remove(myRole2);
-            message.reply('Correct! You are free!');
-        } else if (attempts == 0){
-            escaping = false;
-            message.reply('You have used up all of your attempts! Try escaping again.');
-        } else{
-            message.reply('Incorrect! Try again! You have ' + attempts + ' attempts remaining!');
+        if(escaperID == message.author.id) {
+            attempts--;
+            input = Number(mainCommand);
+            if(input == ans){
+                escaping = false;
+                myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+                myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+                message.member.roles.remove(myRole);
+                message.member.roles.remove(myRole2);
+                message.reply('Correct! You are free!');
+            } else if (attempts == 0){
+                escaping = false;
+                message.reply('You have used up all of your attempts! Try escaping again.');
+            } else{
+                message.reply('Incorrect! Try again! You have ' + attempts + ' attempts remaining!');
+            }
+        } else {
+            message.reply('Please wait for the other person to escape first.');
         }
     } else if(mainCommand === 'ping'){
         message.channel.send('pong!');
@@ -93,7 +98,7 @@ client.on('message', message =>{
                 message.reply('You have been shot and put in jail!');
                 barrels = getRandomInt(6);
             } else {
-                message.channel.send('Phew, the barrel chamber was empty.');
+                message.channel.send('Phew, the barrel chamber was empty!');
             }
         } else {
             message.reply("You're already in jail!");
@@ -106,6 +111,7 @@ client.on('message', message =>{
             message.reply('What is ' + num1 + ' + ' + num2 + ' = ?');
             escaping = true;
             attempts = 3;
+            escaperID = message.author.id;
         } else if ((message.member.roles.cache.find(r => r.name === "Horny"))) {
             message.reply("You can't escape! You were manually put in jail!")
         } else {
