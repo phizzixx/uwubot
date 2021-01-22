@@ -126,8 +126,8 @@ client.on('message', message =>{
             message.reply("You're already free!")
         }
     } else if (mainCommand == 'pet') {
-        let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*']
-        message.channel.send(arr[getRandomInt(12)-1] + ' >w< <:peepoShy:782174763115610124>');
+        let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*beep boop*']
+        message.channel.send(arr[getRandomInt(15)-1] + ' >w< <:peepoShy:782174763115610124>');
     } else if (mainCommand == 'help') {
         message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot');
     }
