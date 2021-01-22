@@ -117,9 +117,15 @@ client.on('message', message =>{
         } else {
             message.reply("You're already free!")
         }
-    }
-    else if (mainCommand == 'help') {
-        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot');
+    } else if ((mainCommand == 'override')){
+        if(message.member.roles.cache.find(r => r.name === "Sheriff")){
+            escaping = false;
+            message.channel.send('All escape attempts have been eliminated.');
+        } else {
+            message.reply("You can't do that! You're not a sheriff!")
+        }
+    } else if (mainCommand == 'help') {
+        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt');
     }
 })
 
@@ -156,5 +162,4 @@ function image(message){
         message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
     });
 }
-
 client.login(process.env.BOT_TOKEN);
