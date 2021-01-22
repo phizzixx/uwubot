@@ -6,6 +6,10 @@ const request = require('request');
 const client = new Discord.Client();
 
 const prefix = '%';
+barrels = getRandomInt(6);
+escaping = false;
+ans = null;
+attempts = null;
 
 client.once('ready', () =>{
     console.log('Bot is online!')
@@ -20,7 +24,23 @@ client.on('message', message =>{
     let splitCommand = command.split(" ");
     let mainCommand = splitCommand[0];
 
-    if(mainCommand === 'ping'){
+    if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
+        attempts--;
+        input = Number(mainCommand);
+        if(input == ans){
+            escaping = false;
+            myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+            message.member.roles.remove(myRole);
+            message.member.roles.remove(myRole2);
+            message.reply('Correct! You are free!');
+        } else if (attempts == 0){
+            escaping = false;
+            message.reply('You have used up all of your attempts! Try escaping again.');
+        } else{
+            message.reply('Incorrect! Try again! You have ' + attempts + ' attempts remaining!');
+        }
+    } else if(mainCommand === 'ping'){
         message.channel.send('pong!');
     } else if (mainCommand == 'uwu') {
         if(message.reference != null){
@@ -62,10 +82,44 @@ client.on('message', message =>{
                 message.channel.send('<@' + uid + '> is already free!');
             }
         }
-    } else if (mainCommand == 'help') {
-        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail');
+    } else if ((mainCommand == 'roulette')){
+        if(!(message.member.roles.cache.find(r => r.name === "Roulette")) && !(message.member.roles.cache.find(r => r.name === "Horny"))){
+            barrels--;
+            if (barrels == 0){
+                myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+                myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+                message.member.roles.add(myRole);
+                message.member.roles.add(myRole2);
+                message.reply('You have been shot and put in jail!');
+                barrels = getRandomInt(6);
+            } else {
+                message.channel.send('Phew, the barrel chamber was empty.');
+            }
+        } else {
+            message.reply("You're already in jail!");
+        }
+    } else if ((mainCommand == 'escape')){
+        if((message.member.roles.cache.find(r => r.name === "Roulette"))){
+            num1 = getRandomInt(200);
+            num2 = getRandomInt(200);
+            ans = num1 + num2;
+            message.reply('What is ' + num1 + ' + ' + num2 + ' = ?');
+            escaping = true;
+            attempts = 3;
+        } else if ((message.member.roles.cache.find(r => r.name === "Horny"))) {
+            message.reply("You can't escape! You were manually put in jail!")
+        } else {
+            message.reply("You're already free!")
+        }
+    }
+    else if (mainCommand == 'help') {
+        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a gun with');
     }
 })
+
+function getRandomInt(max) {
+    return (Math.floor(Math.random() * Math.floor(max)) + 1);
+}
 
 function image(message){
     var options = {
