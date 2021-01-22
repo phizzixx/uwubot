@@ -32,26 +32,6 @@ client.on('message', message =>{
         } else {
             message.reply("You can't do that! You're not a sheriff!")
         }
-    } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
-        if(escaperID == message.author.id) {
-            attempts--;
-            input = Number(mainCommand);
-            if(input == ans){
-                escaping = false;
-                myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
-                myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-                message.member.roles.remove(myRole);
-                message.member.roles.remove(myRole2);
-                message.reply('Correct! You are free!');
-            } else if (attempts == 0){
-                escaping = false;
-                message.reply('You have used up all of your attempts! Try escaping again.');
-            } else{
-                message.reply('Incorrect! Try again! You have ' + attempts + ' attempts remaining!');
-            }
-        } else {
-            message.reply('Please wait for the other person to escape first.');
-        }
     } else if(mainCommand === 'ping'){
         message.channel.send('pong!');
     } else if (mainCommand == 'uwu') {
@@ -158,6 +138,26 @@ client.on('message', message =>{
         message.channel.send(arr[getRandomInt(15)-1] + ' >w< <:peepoShy:782174763115610124>');
     } else if (mainCommand == 'help') {
         message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked');
+    } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
+        if(escaperID == message.author.id) {
+            attempts--;
+            input = Number(mainCommand);
+            if(input == ans){
+                escaping = false;
+                myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+                myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+                message.member.roles.remove(myRole);
+                message.member.roles.remove(myRole2);
+                message.reply('Correct! You are free!');
+            } else if (attempts == 0){
+                escaping = false;
+                message.reply('You have used up all of your attempts! Try escaping again.');
+            } else{
+                message.reply('Incorrect! Try again! You have ' + attempts + ' attempts remaining!');
+            }
+        } else {
+            message.reply('Please wait for the other person to escape first.');
+        }
     }
 })
 
