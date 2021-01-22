@@ -94,7 +94,7 @@ client.on('message', message =>{
                 message.channel.send('<@' + uid + '> is already free!');
             }
         }
-    } else if ((mainCommand == 'roulette')){
+    } else if (mainCommand == 'roulette'){
         if(!(message.member.roles.cache.find(r => r.name === "Roulette")) && !(message.member.roles.cache.find(r => r.name === "Horny"))){
             barrels--;
             if (barrels == 0){
@@ -111,7 +111,7 @@ client.on('message', message =>{
         } else {
             message.reply("You're already in jail!");
         }
-    } else if ((mainCommand == 'escape')){
+    } else if (mainCommand == 'escape'){
         if((message.member.roles.cache.find(r => r.name === "Roulette"))){
             num1 = getRandomInt(200);
             num2 = getRandomInt(200);
@@ -125,8 +125,10 @@ client.on('message', message =>{
         } else {
             message.reply("You're already free!")
         }
+    } else if (mainCommand == 'pet') {
+        message.channel.send('>w< <:peepoShy:782174763115610124>');
     } else if (mainCommand == 'help') {
-        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt');
+        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot');
     }
 })
 
