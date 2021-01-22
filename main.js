@@ -25,7 +25,14 @@ client.on('message', message =>{
     let splitCommand = command.split(" ");
     let mainCommand = splitCommand[0];
 
-    if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
+    if ((mainCommand == 'override')){
+        if(message.member.roles.cache.find(r => r.name === "Sheriff")){
+            escaping = false;
+            message.channel.send('All escape attempts have been eliminated.');
+        } else {
+            message.reply("You can't do that! You're not a sheriff!")
+        }
+    } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
             attempts--;
             input = Number(mainCommand);
@@ -116,13 +123,6 @@ client.on('message', message =>{
             message.reply("You can't escape! You were manually put in jail!")
         } else {
             message.reply("You're already free!")
-        }
-    } else if ((mainCommand == 'override')){
-        if(message.member.roles.cache.find(r => r.name === "Sheriff")){
-            escaping = false;
-            message.channel.send('All escape attempts have been eliminated.');
-        } else {
-            message.reply("You can't do that! You're not a sheriff!")
         }
     } else if (mainCommand == 'help') {
         message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt');
