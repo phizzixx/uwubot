@@ -103,7 +103,7 @@ client.on('message', message =>{
                 message.member.roles.add(myRole);
                 message.member.roles.add(myRole2);
                 message.reply('You have been shot and put in jail!');
-                message.channel.send('*reloading and spinning the revolver* <a:loading:802090410457038858>');
+                message.channel.send('*reloading and spinning the revolver* <a:loading:802093362005803049>');
                 barrels = getRandomInt(6);
             } else {
                 message.channel.send('Phew, the barrel chamber was empty!');
