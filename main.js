@@ -84,6 +84,9 @@ client.on('message', message =>{
                     myRole3 = message.guild.roles.cache.find(role => role.name === "Roulette");
                     mentioned.roles.remove(myRole3)
                     mentioned.roles.add(myRole)
+                    if(uid == escaperID) {
+                        escaping = false;
+                    }
                     message.reply("Roulette status has been removed, and <@" + uid + "> has been jailed.");
             }
         }
