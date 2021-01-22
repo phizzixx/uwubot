@@ -31,32 +31,36 @@ client.on('message', message =>{
     } else if (mainCommand == 'monke') {
         image(message);
     } else if ((mainCommand == 'jail') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
-        uid = message.mentions.users.first().id;
-        myRole = message.guild.roles.cache.find(role => role.name === "Horny");
-        myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-        mentioned = message.guild.members.cache.get(uid)
-        if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
-            if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
-                mentioned.roles.add(myRole)
-                mentioned.roles.add(myRole2)
-                message.channel.send('<@' + uid + '> has been jailed!');
+        if(message.mentions.users.first() != undefined) {
+            uid = message.mentions.users.first().id;
+            myRole = message.guild.roles.cache.find(role => role.name === "Horny");
+            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+            mentioned = message.guild.members.cache.get(uid)
+            if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
+                if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
+                    mentioned.roles.add(myRole)
+                    mentioned.roles.add(myRole2)
+                    message.channel.send('<@' + uid + '> has been jailed!');
+                } else {
+                    message.channel.send('<@' + uid + '> is already jailed!');
+                }
             } else {
-                message.channel.send('<@' + uid + '> is already jailed!');
+                message.reply('You can\'t do that! They\'re a sheriff!');
             }
-        } else {
-            message.reply('You can\'t do that! They\'re a sheriff!');
         }
     } else if ((mainCommand == 'free') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
-        uid = message.mentions.users.first().id;
-        myRole = message.guild.roles.cache.find(role => role.name === "Horny");
-        myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-        mentioned = message.guild.members.cache.get(uid)
-        if(mentioned.roles.cache.find(r => r.name === "Horny")){
-            mentioned.roles.remove(myRole)
-            mentioned.roles.remove(myRole2)
-            message.channel.send('<@' + uid + '> has been freed!');
-        } else {
-            message.channel.send('<@' + uid + '> is already free!');
+        if(message.mentions.users.first() != undefined) {
+            uid = message.mentions.users.first().id;
+            myRole = message.guild.roles.cache.find(role => role.name === "Horny");
+            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+            mentioned = message.guild.members.cache.get(uid)
+            if(mentioned.roles.cache.find(r => r.name === "Horny")){
+                mentioned.roles.remove(myRole)
+                mentioned.roles.remove(myRole2)
+                message.channel.send('<@' + uid + '> has been freed!');
+            } else {
+                message.channel.send('<@' + uid + '> is already free!');
+            }
         }
     } else if (mainCommand == 'help') {
         message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail');
