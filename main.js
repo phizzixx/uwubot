@@ -126,7 +126,7 @@ client.on('message', message =>{
             message.reply("You're already free!")
         }
     } else if (mainCommand == 'pet') {
-        message.channel.send('>w< <:peepoShy:782174763115610124>');
+        message.channel.send('*happy robot sounds* >w< <:peepoShy:782174763115610124>');
     } else if (mainCommand == 'help') {
         message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot');
     }
