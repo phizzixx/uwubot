@@ -106,18 +106,22 @@ client.on('message', message =>{
             message.reply("You're already in jail!");
         }
     } else if (mainCommand == 'escape'){
-        if((message.member.roles.cache.find(r => r.name === "Roulette"))){
-            num1 = getRandomInt(200);
-            num2 = getRandomInt(200);
-            ans = num1 + num2;
-            message.reply('What is ' + num1 + ' + ' + num2 + ' = ?');
-            escaping = true;
-            attempts = 3;
-            escaperID = message.author.id;
-        } else if ((message.member.roles.cache.find(r => r.name === "Horny"))) {
-            message.reply("You can't escape! You were manually put in jail!")
+        if(!escaping) {
+            if((message.member.roles.cache.find(r => r.name === "Roulette"))){
+                num1 = getRandomInt(200);
+                num2 = getRandomInt(200);
+                ans = num1 + num2;
+                message.reply('What is ' + num1 + ' + ' + num2 + ' = ?');
+                escaping = true;
+                attempts = 3;
+                escaperID = message.author.id;
+            } else if ((message.member.roles.cache.find(r => r.name === "Horny"))) {
+                message.reply("You can't escape! You were manually put in jail!")
+            } else {
+                message.reply("You're already free!")
+            }
         } else {
-            message.reply("You're already free!")
+            message.reply('Please wait for the other person to escape first.');
         }
     } else if (mainCommand == 'finalroulette'){
         if((message.member.roles.cache.find(r => r.name === "Roulette")) && !(message.member.roles.cache.find(r => r.name === "Horny"))){
