@@ -108,8 +108,8 @@ client.on('message', message =>{
     } else if (mainCommand == 'escape'){
         if(!escaping) {
             if((message.member.roles.cache.find(r => r.name === "Roulette"))){
-                num1 = getRandomInt(200);
-                num2 = getRandomInt(200);
+                num1 = getRandomInt(2000);
+                num2 = getRandomInt(2000);
                 ans = num1 + num2;
                 message.reply('What is ' + num1 + ' + ' + num2 + ' = ?');
                 escaping = true;
