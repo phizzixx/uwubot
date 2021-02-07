@@ -19,7 +19,7 @@ client.once('ready', () =>{
 client.on('message', message =>{
     if(message.author.bot) return;
     
-    if(message.channel.name != "homework" || message.content.includes("tenor")){
+    if(message.channel.name != "homework" && !message.content.includes("tenor")){
         const attachments = message.attachments.array();
         if(attachments.length > 0){
             if(message.content != ""){
