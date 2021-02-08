@@ -17,40 +17,7 @@ client.once('ready', () =>{
 });
 
 client.on('message', message =>{
-    if(message.author.bot) return;
     
-    if(message.channel.name != "homework" && !message.content.includes("tenor")){
-        const attachments = message.attachments.array();
-        if(attachments.length > 0){
-            if(message.content != ""){
-                message.delete();
-            } else {
-                const attachment = attachments[0]; 
-                if (attachments.length !== 0) {
-                    extIndex = attachment.name.lastIndexOf('.');
-                    const attEx = attachment.name.slice(extIndex + 1);
-                    if (attEx != "gif" && attEx != "mp4" && attEx != "mov") {
-                        message.delete();
-                    }
-                }
-            }
-        } else {
-            gifV = null;
-            if(message.embeds.length > 0){
-                string = message.embeds[0].url;
-                if(message.embeds[0].type == "gifv" || message.embeds[0].type == "video"){
-                    gifV = true;
-                }
-            } else {
-                string = message.content;
-            }
-            if ((!isURL(string) || !isGIF(string)) && !gifV) {
-                message.delete(message);
-            }
-        }
-    }
-
-    /*
     if(!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -202,20 +169,7 @@ client.on('message', message =>{
             message.reply('Please wait for the other person to escape first.');
         }
     }
-    */
 })
-
-function isURL(string) {
-    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-    return regexp.test(string);
-}
-
-function isGIF(string) {
-    string = string.split('?')[0];
-    var parts = string.split('.');
-    var extension = parts[parts.length-1];
-    return (extension == 'gif');
-};
 
 function getRandomInt(max) {
     return (Math.floor(Math.random() * Math.floor(max)) + 1);
