@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const uwufy = require('uwufy');
 const cheerio = require('cheerio');
 const request = require('request');
+const ud = require('urban-dictionary')
 
 const client = new Discord.Client();
 
@@ -17,11 +18,10 @@ client.once('ready', () =>{
 });
 
 client.on('message', message =>{
-    
     if(!message.content.startsWith(prefix) || message.author.bot) return;
 
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
+    const args = message.content.substring(1);
+    const command = args.toLowerCase();
 
     let splitCommand = command.split(" ");
     let mainCommand = splitCommand[0];
@@ -138,6 +138,10 @@ client.on('message', message =>{
         } else {
             message.reply("You have to lose to %roulette first!");
         }
+    } else if (mainCommand == 'ud'){
+        urbDict(splitCommand[1], message, "def");
+    } else if (mainCommand == 'example'){
+        urbDict(splitCommand[1], message, "example");
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -170,6 +174,21 @@ client.on('message', message =>{
         }
     }
 })
+
+function urbDict(text, message, type){
+    // Callback
+    ud.define(text, (error, results) => {
+        if (error) {
+        console.error(`define (callback) error - ${error.message}`)
+        return
+        }
+        if(type == "def"){
+            message.channel.send("**" + text + "**:\n" + results[0].definition);
+        } else {
+            message.channel.send("**" + text + "**:\n" + results[0].example);
+        }
+    })
+}
 
 function getRandomInt(max) {
     return (Math.floor(Math.random() * Math.floor(max)) + 1);
