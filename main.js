@@ -192,7 +192,19 @@ function urbDict(text, message, type){
                     return
                 }  
                 text = (results[0]);
+                ud.define('test', (error, results) => {
+                    if (error) {
+                      console.error(`define (callback) error - ${error.message}`)
+                      return
+                    }
+                    if(type == "def"){
+                        message.channel.send("**" + text + "**:\n" + results[0].definition);
+                    } else {
+                        message.channel.send("**" + text + "**:\n" + results[0].example);
+                    }
+                  })
             })
+            return
         }
         if(type == "def"){
             message.channel.send("**" + text + "**:\n" + results[0].definition);
