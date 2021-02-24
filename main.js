@@ -151,7 +151,7 @@ client.on('message', message =>{
             message.channel.send(arr[petNum] + ' >w< <:peepoShy:782174763115610124>');
         }
     } else if (mainCommand == 'help') {
-        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked');
+        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary\n**%example [word]** - retrieves an example sentence from urban dictionary');
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
             attempts--;
