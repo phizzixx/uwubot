@@ -22,7 +22,6 @@ client.on('message', message =>{
 
     const args = message.content.substring(1);
     const command = args.toLowerCase();
-    console.log(command);
 
     let mainCommand = null;
     let splitCommand = null;
@@ -149,6 +148,14 @@ client.on('message', message =>{
         urbDict(splitCommand, message, "def");
     } else if (mainCommand == 'example'){
         urbDict(splitCommand, message, "example");
+    } else if (mainCommand == 'random'){
+        ud.random((error, results) => {
+            if (error) {
+              console.error(`random (callback) error - ${error.message}`)
+              return
+            }
+            message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
+        })
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -158,7 +165,7 @@ client.on('message', message =>{
             message.channel.send(arr[petNum] + ' >w< <:peepoShy:782174763115610124>');
         }
     } else if (mainCommand == 'help') {
-        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary\n**%example [word]** - retrieves an example sentence from urban dictionary');
+        message.reply('\n**%uwu** - uwu-fys messages that you reply to\n**%monke** - monke\n**%jail [user]** - mutes a user and puts them in jail\n**%free [user]** - frees a user from jail\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary');
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
             attempts--;
@@ -183,7 +190,6 @@ client.on('message', message =>{
 })
 
 function urbDict(text, message, type){
-    // Callback
     ud.define(text, (error, results) => {
         if (error) {
             ud.autocomplete(text, (error, results) => {
@@ -192,24 +198,24 @@ function urbDict(text, message, type){
                     return
                 }  
                 text = (results[0]);
-                ud.define('test', (error, results) => {
+                ud.define(text, (error, results) => {
                     if (error) {
                       console.error(`define (callback) error - ${error.message}`)
                       return
                     }
                     if(type == "def"){
-                        message.channel.send("**" + text + "**:\n" + results[0].definition);
+                        message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
                     } else {
-                        message.channel.send("**" + text + "**:\n" + results[0].example);
+                        message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
                     }
                   })
             })
             return
         }
         if(type == "def"){
-            message.channel.send("**" + text + "**:\n" + results[0].definition);
+            message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
         } else {
-            message.channel.send("**" + text + "**:\n" + results[0].example);
+            message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
         }
     })
 }
