@@ -146,9 +146,9 @@ client.on('message', message =>{
             message.reply("You have to lose to %roulette first!");
         }
     } else if (mainCommand == 'ud'){
-        urbDict(splitCommand[1], message, "def");
+        urbDict(splitCommand, message, "def");
     } else if (mainCommand == 'example'){
-        urbDict(splitCommand[1], message, "example");
+        urbDict(splitCommand, message, "example");
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
