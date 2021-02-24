@@ -22,10 +22,17 @@ client.on('message', message =>{
 
     const args = message.content.substring(1);
     const command = args.toLowerCase();
+    console.log(command);
 
-    let splitCommand = command.split(" ");
-    let mainCommand = splitCommand[0];
-
+    let mainCommand = null;
+    let splitCommand = null;
+    if(command.indexOf(' ') == -1){
+        mainCommand = command.substr(command.indexOf(' ') + 1);
+    } else {
+        mainCommand = command.substr(0, command.indexOf(' '));
+        splitCommand = command.substr(command.indexOf(' ') + 1);
+    }
+    
     if ((mainCommand == 'override')){
         if(message.member.roles.cache.find(r => r.name === "Sheriff")){
             escaping = false;
@@ -177,17 +184,25 @@ client.on('message', message =>{
 
 function urbDict(text, message, type){
     // Callback
-    ud.define(text, (error, results) => {
+    let term = null;
+    ud.autocomplete(text, (error, results) => {
         if (error) {
-        console.error(`define (callback) error - ${error.message}`)
-        return
+            message.channel.send(`autocomplete (callback) error - ${error.message}`)
+            return
         }
-        if(type == "def"){
-            message.channel.send("**" + text + "**:\n" + results[0].definition);
-        } else {
-            message.channel.send("**" + text + "**:\n" + results[0].example);
-        }
-    })
+        term = (results[0]);
+        ud.define(term, (error, results) => {
+            if (error) {
+            message.channel.send(`define (callback) error - ${error.message}`)
+            return
+            }
+            if(type == "def"){
+                message.channel.send("**" + term + "**:\n" + results[0].definition);
+            } else {
+                message.channel.send("**" + term + "**:\n" + results[0].example);
+            }
+        })
+      })
 }
 
 function getRandomInt(max) {
