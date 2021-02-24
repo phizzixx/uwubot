@@ -184,25 +184,22 @@ client.on('message', message =>{
 
 function urbDict(text, message, type){
     // Callback
-    let term = null;
-    ud.autocomplete(text, (error, results) => {
+    ud.define(text, (error, results) => {
         if (error) {
-            message.channel.send(`autocomplete (callback) error - ${error.message}`)
-            return
+            ud.autocomplete(text, (error, results) => {
+                if (error) {
+                    console.error(`autocomplete (callback) error - ${error.message}`)
+                    return
+                }  
+                text = (results[0]);
+            })
         }
-        term = (results[0]);
-        ud.define(term, (error, results) => {
-            if (error) {
-            message.channel.send(`define (callback) error - ${error.message}`)
-            return
-            }
-            if(type == "def"){
-                message.channel.send("**" + term + "**:\n" + results[0].definition);
-            } else {
-                message.channel.send("**" + term + "**:\n" + results[0].example);
-            }
-        })
-      })
+        if(type == "def"){
+            message.channel.send("**" + text + "**:\n" + results[0].definition);
+        } else {
+            message.channel.send("**" + text + "**:\n" + results[0].example);
+        }
+    })
 }
 
 function getRandomInt(max) {
