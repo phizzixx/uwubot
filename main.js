@@ -74,7 +74,6 @@ client.once('ready', () =>{
         if (!err) {
             jsonText = (json_data.Body).toString("utf8");
             shortTimeDict = new Map(JSON.parse(jsonText));
-            console.log(shortTimeDict);
         }
     });
     params = {Bucket: 'duckhuntgame', Key: 'duckhunt/scores.json'};
@@ -83,7 +82,6 @@ client.once('ready', () =>{
         if (!err) {
             jsonText = (json_data.Body).toString("utf8");
             scoreDict = new Map(JSON.parse(jsonText));
-            console.log(scoreDict);
         }
     });
 });
@@ -94,7 +92,6 @@ client.on('message', message =>{
         let keys = Array.from(scoreDict.keys());
         for (var i = 0; i < keys.length; i++) {
             client.users.fetch(keys[i], true);
-            console.log("hi");
         }
         startUp = true;
     }
