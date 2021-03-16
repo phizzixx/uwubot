@@ -242,7 +242,7 @@ client.on('message', message =>{
             }
             if(scoreDict.has(uid)){
                 message.channel.send("**" + uNick + " Score**: " + scoreDict.get(uid));
-                if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-5)){
+                if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-10)){
                     message.reply("You have been placed in jail for repeated missing! You can escape wioth %escape")
                     myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
                     myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
