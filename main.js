@@ -327,8 +327,10 @@ client.on('message', message =>{
             }
             key = keys[i];
             value = values[i]
-            uNick = client.users.cache.get(key).username;
-            msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
+            if(value !== 12345.6789){
+                uNick = client.users.cache.get(key).username;
+                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
+            }
         }
         message.channel.send(msg);
 
@@ -342,8 +344,10 @@ client.on('message', message =>{
             }
             key = keys[i];
             value = values[i]
-            uNick = client.users.cache.get(key).username;
-            msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
+            if(value !== 12345.6789){
+                uNick = client.users.cache.get(key).username;
+                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
+            }
         } 
         message.channel.send(msg);
     } else if (mainCommand == 'pet') {
