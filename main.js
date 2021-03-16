@@ -370,12 +370,7 @@ client.on('message', message =>{
         keys = Array.from(shortTimeDict.keys());
         values = Array.from(shortTimeDict.values());
         msg = "**__Fastest Times__:**\n"
-        for(var i = 0; i < keys.length; i++){
-            if(parseFloat(values[i]) === 12345.6789){
-                keys.splice(i, 1);
-                values.splice(i, 1);
-            }
-        }
+        removeAllElements(values, keys, 12345.6789);
         for (var i = 0; i < 5; i++) {
             if (keys.length < i+1){
                 break;
@@ -391,12 +386,7 @@ client.on('message', message =>{
         keys = Array.from(longTimeDict.keys());
         values = Array.from(longTimeDict.values());
         msg = "**__Slowest Times__:**\n"
-        for(var i = 0; i < keys.length; i++){
-            if(parseFloat(values[i]) === 12345.6789){
-                keys.splice(i, 1);
-                values.splice(i, 1);
-            }
-        }
+        removeAllElements(values, keys, 12345.6789);
         for (var i = 0; i < 5; i++) {
             if (keys.length < i+1){
                 break;
@@ -500,6 +490,15 @@ function urbDict(text, message, type){
 
 function getRandomInt(max) {
     return (Math.floor(Math.random() * Math.floor(max)) + 1);
+}
+
+function removeAllElements(array, array2, elem) {
+    var index = array.indexOf(elem);
+    while (index > -1) {
+        array.splice(index, 1);
+        array2.splice(index, 1);
+        index = array.indexOf(elem);
+    }
 }
 
 function image(message){
