@@ -19,6 +19,7 @@ AWS.config.update(
   );
 
 var s3 = new AWS.S3();
+
 const uploadFile = (filePath, bucketName, key) => {
   fs.readFile(filePath, (err, data) => {
     if (err) console.error(err);
