@@ -77,6 +77,7 @@ client.once('ready', () =>{
     //score table making
     jsonText = fs.readFileSync('scores.json');
     scoreDict = new Map(JSON.parse(jsonText));
+    console.log(scoreDict);
     jsonText = fs.readFileSync('shortestTimes.json');
     shortTimeDict = new Map(JSON.parse(jsonText));
     jsonText = fs.readFileSync('longestTimes.json');
