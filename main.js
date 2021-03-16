@@ -371,7 +371,7 @@ client.on('message', message =>{
         values = Array.from(shortTimeDict.values());
         msg = "**__Fastest Times__:**\n"
         for(var i = 0; i < keys.length; i++){
-            if(values[i] === 12345.6789){
+            if(parseFloat(values[i]) === 12345.6789){
                 keys.splice(i, 1);
                 values.splice(i, 1);
             }
@@ -392,7 +392,7 @@ client.on('message', message =>{
         values = Array.from(longTimeDict.values());
         msg = "**__Slowest Times__:**\n"
         for(var i = 0; i < keys.length; i++){
-            if(values[i] === 12345.6789){
+            if(parseFloat(values[i]) === 12345.6789){
                 keys.splice(i, 1);
                 values.splice(i, 1);
             }
