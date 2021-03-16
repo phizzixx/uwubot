@@ -233,12 +233,12 @@ client.on('message', message =>{
             message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
         })
     } else if (((mainCommand == 'shoot') || (mainCommand == 'bang')) && (message.channel === client.channels.cache.find(ch => ch.name === 'general'))){
+        t1 = performance.now();
+        totalTime = ((t1 - t0)/1000).toFixed(3);
         if(duckAlive){
             gainedPts = 1;
-            t1 = performance.now();
-            totalTime = ((t1 - t0)/1000).toFixed(3);
             if(goldenDuck){
-                message.reply("You shot a **golden** duck! \\\\_x< | +5 points (" + totalTime + " seconds)")
+                message.reply("You shot a **golden** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
                 gainedPts = 5;
             } else {
                 message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
@@ -258,7 +258,7 @@ client.on('message', message =>{
             }
             duckHunt();
         } else {
-            message.reply("There was no duck! -1 point");
+            message.reply("There was no duck! -1 point (" + totalTime + " seconds)");
             if(scoreDict.has(message.author.id)){
                 scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
                 if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
