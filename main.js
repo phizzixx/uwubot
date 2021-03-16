@@ -76,6 +76,7 @@ client.once('ready', () =>{
     downloadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     //score table making
     jsonText = fs.readFileSync('./duckhunt/scores.json');
+    console.log(jsonText);
     scoreDict = new Map(JSON.parse(jsonText));
     jsonText = fs.readFileSync('./duckhunt/shortestTimes.json');
     shortTimeDict = new Map(JSON.parse(jsonText));
