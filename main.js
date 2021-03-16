@@ -215,7 +215,13 @@ client.on('message', message =>{
             message.reply("There was no duck! -1 point");
             if(scoreDict.has(message.author.id)){
                 scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
-                client.channels.cache.find(ch => ch.name === 'moderator-only').send("?mute <@" + message.author.id + "> 30s duckhunt");
+                if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
+                    message.reply("You have been placed in jail for repeated missing! You can escape wioth %escape")
+                    myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+                    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+                    message.member.roles.add(myRole);
+                    message.member.roles.add(myRole2);
+                }
             } else {
                 scoreDict.set(message.author.id, -1);
                 shortTimeDict.set(message.author.id, 12345.6789);
@@ -242,13 +248,6 @@ client.on('message', message =>{
             }
             if(scoreDict.has(uid)){
                 message.channel.send("**" + uNick + " Score**: " + scoreDict.get(uid));
-                if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
-                    message.reply("You have been placed in jail for repeated missing! You can escape wioth %escape")
-                    myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
-                    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-                    message.member.roles.add(myRole);
-                    message.member.roles.add(myRole2);
-                }
             } else {
                 message.channel.send("**" + uNick + " Score**: " + 0);
             }
