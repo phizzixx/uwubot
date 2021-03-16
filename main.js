@@ -232,7 +232,7 @@ client.on('message', message =>{
             }
             message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
         })
-    } else if (((mainCommand == 'shoot') || (mainCommand == 'bang')) && (message.channel === client.channels.cache.find(ch => ch.name === 'general'))){
+    } else if (((mainCommand == 'shoot') || (mainCommand == 'bang')) && (message.channel === client.channels.cache.find(ch => ch.name === 'duck-hunt'))){
         t1 = performance.now();
         totalTime = ((t1 - t0)/1000).toFixed(3);
         if(duckAlive){
@@ -465,7 +465,7 @@ function spawnDuck(){
             if(getRandomInt(100) <= 7){
                 goldenDuck = true;
             }
-            client.channels.cache.find(ch => ch.name === 'general').send("\\\\_o< quack!");
+            client.channels.cache.find(ch => ch.name === 'duck-hunt').send("\\\\_o< quack!");
             t0 = performance.now();
         }
         timer++;
