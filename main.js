@@ -215,6 +215,7 @@ client.on('message', message =>{
             message.reply("There was no duck! -1 point");
             if(scoreDict.has(message.author.id)){
                 scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
+                client.channels.cache.find(ch => ch.name === 'moderator-only').send("?mute <@" + message.author.id + "> 30s duckhunt");
             } else {
                 scoreDict.set(message.author.id, -1);
                 shortTimeDict.set(message.author.id, 12345.6789);
