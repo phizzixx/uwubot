@@ -12,8 +12,8 @@ const {
 const AWS = require('aws-sdk');
 AWS.config.update(
     {
-      accessKeyId: process.env.accessKey,
-      secretAccessKey: process.env.secretKey,
+      accessKeyId: "AKIA3BHRVOYLECLXAZJO",
+      secretAccessKey: "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",
       region: 'ca-central-1'
     }
   );
@@ -35,18 +35,6 @@ const uploadFile = (filePath, bucketName, key) => {
   });
 };
 
-const downloadFile = (filePath, bucketName, key) => {
-    const params = {
-        Bucket: bucketName,
-        Key: key
-    };
-    s3.getObject(params, (err, data) => {
-        if (err) console.error(err);
-        fs.writeFileSync(filePath, data.Body.toString());
-        console.log("hi");
-    });
-};
-
 const client = new Discord.Client();
 
 const prefix = '%';
@@ -56,7 +44,6 @@ ans = null;
 attempts = null;
 escaperID = null;
 
-startUp = false;
 timer = null;
 t0 = null;
 t1 = null;
@@ -69,13 +56,36 @@ longTimeDict = new Map();
 
 client.once('ready', () =>{
     console.log('Bot is online!')
-    
-    downloadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
-    downloadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
-    downloadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     duckHunt();
     setInterval(spawnDuck, 1000);
-    //score table making
+
+    params = {Bucket: 'duckhuntgame', Key: 'duckhunt/longestTimes.json'};
+    s3.getObject(params, function(err, json_data)
+    {
+        if (!err) {
+            jsonText = (json_data.Body).toString("utf8");
+            longTimeDict = new Map(JSON.parse(jsonText));
+        }
+    });
+    params = {Bucket: 'duckhuntgame', Key: 'duckhunt/shortestTimes.json'};
+    s3.getObject(params, function(err, json_data)
+    {
+        if (!err) {
+            jsonText = (json_data.Body).toString("utf8");
+            shortTimeDict = new Map(JSON.parse(jsonText));
+            console.log(shortTimeDict);
+        }
+    });
+    params = {Bucket: 'duckhuntgame', Key: 'duckhunt/scores.json'};
+    s3.getObject(params, function(err, json_data)
+    {
+        if (!err) {
+            jsonText = (json_data.Body).toString("utf8");
+            scoreDict = new Map(JSON.parse(jsonText));
+            console.log(scoreDict);
+        }
+    });
+    
     i = null;
     let keys = Array.from(scoreDict.keys());
     for (var i = 0; i < keys.length; i++) {
@@ -264,13 +274,13 @@ client.on('message', message =>{
                 longTimeDict.set(message.author.id, 12345.6789);
             }
         }
-        fs.writeFile('./duckhunt/scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
+        fs.writeFile('scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('./duckhunt/shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
+        fs.writeFile('shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
+        fs.writeFile('longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
         uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
@@ -315,6 +325,7 @@ client.on('message', message =>{
             }
             key = keys[i];
             value = values[i]
+            console.log(client.users.cache.get(key));
             uNick = client.users.cache.get(key).username;
             msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "\n");
         }
@@ -429,16 +440,6 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
-    if(!startUp){
-        jsonText = fs.readFileSync('./duckhunt/scores.json');
-        console.log(jsonText);
-        scoreDict = new Map(JSON.parse(jsonText));
-        jsonText = fs.readFileSync('./duckhunt/shortestTimes.json');
-        shortTimeDict = new Map(JSON.parse(jsonText));
-        jsonText = fs.readFileSync('./duckhunt/longestTimes.json');
-        longTimeDict = new Map(JSON.parse(jsonText));
-        startUp = true;
-    }
     duckRespawnTime = getRandomInt(60) + 30;
     duckAlive = false;
     goldenDuck = false;
