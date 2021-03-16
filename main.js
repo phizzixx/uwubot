@@ -339,7 +339,7 @@ client.on('message', message =>{
                 uNick = uNick + "\'s";
             }
             if(scoreDict.has(uid) && (shortTimeDict.get(uid) !== 12345.6789)){
-                message.channel.send("**" + uNick + " Fastest Time**: " + shortTimeDict.get(uid) + "s\n**" + uNick + " Slowest Time**: " + longTimeDict.get(uid) + "s");
+                message.channel.send("**" + uNick + " Fastest Time**: " + shortTimeDict.get(uid) + "s\n**" + uNick + " Longest Time**: " + longTimeDict.get(uid) + "s");
             } else {
                 if(shortTimeDict.get(uid) === 12345.6789) {
                     message.channel.send("They haven't shot a duck yet!");
@@ -356,7 +356,7 @@ client.on('message', message =>{
                 uNick = uNick + "\'s";
             }
             if(scoreDict.has(uid) && (shortTimeDict.get(uid) !== 12345.6789)){
-                message.channel.send("**" + uNick + " Fastest Time**: " + shortTimeDict.get(uid) + "s\n**" + uNick + " Slowest Time**: " + longTimeDict.get(uid) + "s");
+                message.channel.send("**" + uNick + " Fastest Time**: " + shortTimeDict.get(uid) + "s\n**" + uNick + " Longest Time**: " + longTimeDict.get(uid) + "s");
             } else {
                 if(shortTimeDict.get(uid) === 12345.6789) {
                     message.channel.send("You haven't shot a duck yet!");
@@ -385,7 +385,7 @@ client.on('message', message =>{
         longTimeDict = new Map([...longTimeDict.entries()].sort((a, b) => b[1] - a[1]));
         keys = Array.from(longTimeDict.keys());
         values = Array.from(longTimeDict.values());
-        msg = "**__Slowest Times__:**\n"
+        msg = "**__Longest Times__:**\n"
         removeAllElements(values, keys, 12345.6789);
         for (var i = 0; i < 5; i++) {
             if (keys.length < i+1){
@@ -426,7 +426,7 @@ client.on('message', message =>{
         helpString += "\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary";
         helpString += "\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary'\n**%shoot/bang** - shoots the duck (if there is one)";
         helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard/leaderboard** - shows the top 10 duck hunt scores\n**%time(s) *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
-        helpString += "\n**%timeboard** - shows the top 5 fastest and slowest duck hunt times\n**%resetscore [user] - resets the duck hunt score of the mentioned user";
+        helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user] - resets the duck hunt score of the mentioned user";
         message.reply(helpString);
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
