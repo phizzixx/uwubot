@@ -402,6 +402,7 @@ client.on('message', message =>{
             if(message.member.roles.cache.find(r => r.name === "Sheriff")){
                 if(scoreDict.get(message.author.id) >= 0){
                     scoreDict.set(message.mentions.users.first().id, 0);
+                    message.reply("The user's score has been succesfully reset!");
                 } else {
                     message.reply("Your duck hunt score is too low to use the reset command!");
                 }
