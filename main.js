@@ -370,16 +370,20 @@ client.on('message', message =>{
         keys = Array.from(shortTimeDict.keys());
         values = Array.from(shortTimeDict.values());
         msg = "**__Fastest Times__:**\n"
+        for(var i = 0; i < keys.length; i++){
+            if(values[i] === 12345.6789){
+                keys.splice(i, 1);
+                values.splice(i, 1);
+            }
+        }
         for (var i = 0; i < 5; i++) {
             if (keys.length < i+1){
                 break;
             }
             key = keys[i];
             value = values[i]
-            if(value !== 12345.6789){
-                uNick = client.users.cache.get(key).username;
-                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
-            }
+            uNick = client.users.cache.get(key).username;
+            msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
         }
         message.channel.send(msg);
 
@@ -387,16 +391,20 @@ client.on('message', message =>{
         keys = Array.from(longTimeDict.keys());
         values = Array.from(longTimeDict.values());
         msg = "**__Slowest Times__:**\n"
+        for(var i = 0; i < keys.length; i++){
+            if(values[i] === 12345.6789){
+                keys.splice(i, 1);
+                values.splice(i, 1);
+            }
+        }
         for (var i = 0; i < 5; i++) {
             if (keys.length < i+1){
                 break;
             }
             key = keys[i];
             value = values[i]
-            if(value !== 12345.6789){
-                uNick = client.users.cache.get(key).username;
-                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
-            }
+            uNick = client.users.cache.get(key).username;
+            msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
         } 
         message.channel.send(msg);
     } else if (mainCommand == 'pet') {
