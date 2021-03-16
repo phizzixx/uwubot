@@ -56,6 +56,7 @@ ans = null;
 attempts = null;
 escaperID = null;
 
+startUp = false;
 timer = null;
 t0 = null;
 t1 = null;
@@ -68,21 +69,13 @@ longTimeDict = new Map();
 
 client.once('ready', () =>{
     console.log('Bot is online!')
-    duckHunt();
-    setInterval(spawnDuck, 1000);
-
+    
     downloadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
     downloadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
     downloadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
+    duckHunt();
+    setInterval(spawnDuck, 1000);
     //score table making
-    jsonText = fs.readFileSync('./duckhunt/scores.json');
-    console.log(jsonText);
-    scoreDict = new Map(JSON.parse(jsonText));
-    jsonText = fs.readFileSync('./duckhunt/shortestTimes.json');
-    shortTimeDict = new Map(JSON.parse(jsonText));
-    jsonText = fs.readFileSync('./duckhunt/longestTimes.json');
-    longTimeDict = new Map(JSON.parse(jsonText));
-
     i = null;
     let keys = Array.from(scoreDict.keys());
     for (var i = 0; i < keys.length; i++) {
@@ -436,6 +429,16 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
+    if(!startUp){
+        jsonText = fs.readFileSync('./duckhunt/scores.json');
+        console.log(jsonText);
+        scoreDict = new Map(JSON.parse(jsonText));
+        jsonText = fs.readFileSync('./duckhunt/shortestTimes.json');
+        shortTimeDict = new Map(JSON.parse(jsonText));
+        jsonText = fs.readFileSync('./duckhunt/longestTimes.json');
+        longTimeDict = new Map(JSON.parse(jsonText));
+        startUp = true;
+    }
     duckRespawnTime = getRandomInt(60) + 30;
     duckAlive = false;
     goldenDuck = false;
