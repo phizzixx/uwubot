@@ -43,6 +43,7 @@ const downloadFile = (filePath, bucketName, key) => {
     s3.getObject(params, (err, data) => {
         if (err) console.error(err);
         fs.writeFileSync(filePath, data.Body.toString());
+        console.log("hi");
     });
 };
 
