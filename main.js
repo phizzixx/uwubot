@@ -71,15 +71,15 @@ client.once('ready', () =>{
     duckHunt();
     setInterval(spawnDuck, 1000);
 
-    downloadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
-    downloadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
-    downloadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
+    downloadFile('scores.json', 'duckhuntgame', 'duckhunt/scores.json');
+    downloadFile('shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
+    downloadFile('longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     //score table making
-    jsonText = fs.readFileSync('./duckhunt/scores.json');
+    jsonText = fs.readFileSync('scores.json');
     scoreDict = new Map(JSON.parse(jsonText));
-    jsonText = fs.readFileSync('./duckhunt/shortestTimes.json');
+    jsonText = fs.readFileSync('shortestTimes.json');
     shortTimeDict = new Map(JSON.parse(jsonText));
-    jsonText = fs.readFileSync('./duckhunt/longestTimes.json');
+    jsonText = fs.readFileSync('longestTimes.json');
     longTimeDict = new Map(JSON.parse(jsonText));
 
     i = null;
@@ -270,18 +270,18 @@ client.on('message', message =>{
                 longTimeDict.set(message.author.id, 12345.6789);
             }
         }
-        fs.writeFile('./duckhunt/scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
+        fs.writeFile('scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('./duckhunt/shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
+        fs.writeFile('shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
+        fs.writeFile('longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
-        uploadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
-        uploadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
+        uploadFile('scores.json', 'duckhuntgame', 'duckhunt/scores.json');
+        uploadFile('shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
+        uploadFile('longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     } else if (mainCommand == 'score'){
         if(message.mentions.users.first() != undefined) {
             uid = message.mentions.users.first().id;
