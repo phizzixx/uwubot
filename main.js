@@ -12,8 +12,8 @@ const {
 const AWS = require('aws-sdk');
 AWS.config.update(
     {
-      accessKeyId: "AKIA3BHRVOYLECLXAZJO",
-      secretAccessKey: "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",
+      accessKeyId: process.env.accessKey,
+      secretAccessKey: process.env.secretKey,
       region: 'ca-central-1'
     }
   );
@@ -37,13 +37,14 @@ const uploadFile = (filePath, bucketName, key) => {
 
 const client = new Discord.Client();
 
-const prefix = '%';
+const prefix = '$';
 barrels = getRandomInt(6);
 escaping = false;
 ans = null;
 attempts = null;
 escaperID = null;
 
+startUp = false;
 timer = null;
 t0 = null;
 t1 = null;
@@ -85,15 +86,18 @@ client.once('ready', () =>{
             console.log(scoreDict);
         }
     });
-    
-    i = null;
-    let keys = Array.from(scoreDict.keys());
-    for (var i = 0; i < keys.length; i++) {
-        client.users.fetch(keys[i], true);
-    }
 });
 
 client.on('message', message =>{
+    if(!startUp){
+        i = null;
+        let keys = Array.from(scoreDict.keys());
+        for (var i = 0; i < keys.length; i++) {
+            client.users.fetch(keys[i], true);
+            console.log("hi");
+        }
+        startUp = true;
+    }
     if(!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.substring(1);
@@ -325,7 +329,6 @@ client.on('message', message =>{
             }
             key = keys[i];
             value = values[i]
-            console.log(client.users.cache.get(key));
             uNick = client.users.cache.get(key).username;
             msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "\n");
         }
@@ -440,7 +443,7 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
-    duckRespawnTime = getRandomInt(60) + 30;
+    duckRespawnTime = getRandomInt(80) + 40;
     duckAlive = false;
     goldenDuck = false;
     timer = 0;
