@@ -9,6 +9,7 @@
   "author": "Phizz",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.864.0",
     "cheerio": "^1.0.0-rc.5",
     "discord.js": "^12.5.1",
     "request": "^2.88.2",
