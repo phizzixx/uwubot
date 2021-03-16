@@ -278,13 +278,13 @@ client.on('message', message =>{
                 longTimeDict.set(message.author.id, 12345.6789);
             }
         }
-        fs.writeFile('scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
+        fs.writeFile('./duckhunt/scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
+        fs.writeFile('./duckhunt/shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
-        fs.writeFile('longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
+        fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
         uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
