@@ -8,6 +8,44 @@ const {
     performance
 } = require('perf_hooks');
 
+//AWS
+const AWS = require('aws-sdk');
+AWS.config.update(
+    {
+      accessKeyId: "AKIA3BHRVOYLECLXAZJO",
+      secretAccessKey: "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",
+      region: 'ca-central-1'
+    }
+  );
+
+var s3 = new AWS.S3();
+
+const uploadFile = (filePath, bucketName, key) => {
+  fs.readFile(filePath, (err, data) => {
+    if (err) console.error(err);
+    var base64data = new Buffer(data, 'binary');
+    var params = {
+      Bucket: bucketName,
+      Key: key,
+      Body: base64data
+    };
+    s3.upload(params, (err, data) => {
+      if (err) console.error(`Upload Error ${err}`);
+    });
+  });
+};
+
+const downloadFile = (filePath, bucketName, key) => {
+    const params = {
+        Bucket: bucketName,
+        Key: key
+    };
+    s3.getObject(params, (err, data) => {
+        if (err) console.error(err);
+        fs.writeFileSync(filePath, data.Body.toString());
+    });
+};
+
 const client = new Discord.Client();
 
 const prefix = '%';
@@ -32,6 +70,9 @@ client.once('ready', () =>{
     duckHunt();
     setInterval(spawnDuck, 1000);
 
+    downloadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
+    downloadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
+    downloadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     //score table making
     jsonText = fs.readFileSync('./duckhunt/scores.json');
     scoreDict = new Map(JSON.parse(jsonText));
@@ -216,7 +257,7 @@ client.on('message', message =>{
             if(scoreDict.has(message.author.id)){
                 scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
                 if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
-                    message.reply("You have been placed in jail for repeated missing! You can escape with %escape")
+                    message.reply("You have been placed in jail for repeatedly missing! You can escape with %escape")
                     myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
                     myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
                     message.member.roles.add(myRole);
@@ -237,6 +278,9 @@ client.on('message', message =>{
         fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
             if(err) console.log(err)
         })
+        uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
+        uploadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
+        uploadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     } else if (mainCommand == 'score'){
         if(message.mentions.users.first() != undefined) {
             uid = message.mentions.users.first().id;
@@ -467,5 +511,7 @@ function image(message){
         message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
     });
 }
+
+client.login('ODAwMTcxMzAzMjU2MzI2MTQ0.YAOPmQ.DvCqPwsXWuAzGBXnq9n9AZQimgo');
 
 client.login(process.env.BOT_TOKEN);
