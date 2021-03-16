@@ -512,6 +512,4 @@ function image(message){
     });
 }
 
-client.login('ODAwMTcxMzAzMjU2MzI2MTQ0.YAOPmQ.DvCqPwsXWuAzGBXnq9n9AZQimgo');
-
 client.login(process.env.BOT_TOKEN);
