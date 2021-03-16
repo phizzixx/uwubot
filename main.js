@@ -397,6 +397,20 @@ client.on('message', message =>{
             msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "s\n");
         } 
         message.channel.send(msg);
+    } else if (mainCommand == 'resetscore') {
+        if(message.mentions.users.first() != undefined) {
+            if(message.member.roles.cache.find(r => r.name === "Sheriff")){
+                if(scoreDict.get(message.author.id) >= 0){
+                    scoreDict.set(message.mentions.users.first().id, 0);
+                } else {
+                    message.reply("Your duck hunt score is too low to use the reset command!");
+                }
+            } else {
+                message.reply("You can't do that! You're not a sheriff!");
+            }
+        } else {
+            message.reply("You need to mention a user!");
+        }
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -411,7 +425,7 @@ client.on('message', message =>{
         helpString += "\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary";
         helpString += "\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary'\n**%shoot/bang** - shoots the duck (if there is one)";
         helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard/leaderboard** - shows the top 10 duck hunt scores\n**%time(s) *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
-        helpString += "\n**%timeboard** - shows the top 5 fastest and slowest duck hunt times";
+        helpString += "\n**%timeboard** - shows the top 5 fastest and slowest duck hunt times\n**%resetscore [user] - resets the duck hunt score of the mentioned user";
         message.reply(helpString);
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
