@@ -37,11 +37,15 @@ const uploadFile = (filePath, bucketName, key) => {
 const client = new Discord.Client();
 
 const prefix = '%';
+
 barrels = getRandomInt(6);
 escaping = false;
 ans = null;
 attempts = null;
 escaperID = null;
+
+jackboxList = [];
+oldList = [];
 
 startUp = false;
 timer = null;
@@ -412,6 +416,51 @@ client.on('message', message =>{
         } else {
             message.reply("You need to mention a user!");
         }
+    } else if (mainCommand == 'addqueue') {
+        if(message.mentions.users.first() != undefined) {
+            if (!jackboxList.includes(message.mentions.users.first().id)){
+                jackboxList.push(message.mentions.users.first().id);
+                message.reply("User has been added!");
+            } else {
+                message.reply("That user is already in the queue!");
+            }
+        } else {
+            message.reply("You need to mention a user!");
+        }
+    } else if (mainCommand == 'removequeue') {
+        if(message.mentions.users.first() != undefined) {
+            if (jackboxList.includes(message.mentions.users.first().id)){
+                removeAllElements(jackboxList, null, message.mentions.users.first().id);
+                message.reply("User has been removed!");
+            } else {
+                message.reply("That user isn't in the queue!");
+            }
+        } else {
+            message.reply("You need to mention a user!");
+        }
+    } else if (mainCommand == 'rotate' || mainCommand == 'list' || mainCommand == 'queue') {
+        oldList = jackboxList;
+        if(mainCommand == 'rotate'){
+            x = jackboxList.length - 8;
+            if (x>0){
+                for(var i = 0; i < x; i++){
+                    jackboxList.push(jackboxList.shift());
+                }
+            }
+        }
+        msg = "**__Playing__:**\n"
+        for (var i = 0; i < jackboxList.length; i++) {
+            uNick = client.users.cache.get(jackboxList[i]).username;
+            if(i<8){
+                msg += "**" + (i+1) + "**. " + uNick + "\n";
+            } else if(i == 8){
+                msg += msg = "**__Queue__:**\n"
+                msg += uNick + "\n";
+            } else {
+                msg += uNick + "\n";
+            }
+        }
+        message.channel.send(msg);
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -426,7 +475,8 @@ client.on('message', message =>{
         helpString += "\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary";
         helpString += "\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary'\n**%shoot/bang** - shoots the duck (if there is one)";
         helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard/leaderboard** - shows the top 10 duck hunt scores\n**%time(s) *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
-        helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user";
+        helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user\n**%addqueue [user]** - adds a user to the jackbox queue";
+        helpString += "\n**%removequeue [user]** - removes a user from the jackbox queue\n**%rotate** - rotates the jackbox queue\n**%list/queue [user]** - lists the jackbox queue";
         message.reply(helpString);
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
@@ -511,7 +561,9 @@ function removeAllElements(array, array2, elem) {
     var index = array.indexOf(elem);
     while (index > -1) {
         array.splice(index, 1);
-        array2.splice(index, 1);
+        if(array2 != null){
+            array2.splice(index, 1);
+        }
         index = array.indexOf(elem);
     }
 }
