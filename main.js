@@ -240,27 +240,39 @@ client.on('message', message =>{
         t1 = performance.now();
         totalTime = ((t1 - t0)/1000).toFixed(3);
         if(duckAlive){
+            missedNum = getRandomInt(100);
             gainedPts = 1;
-            if(goldenDuck){
-                message.reply("You shot a **golden** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
-                gainedPts = 5;
-            } else {
-                message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
-            }
-            if(scoreDict.has(message.author.id)){
-                scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
-                if((parseFloat(shortTimeDict.get(message.author.id)) > totalTime) || parseFloat(shortTimeDict.get(message.author.id)) === 12345.6789){
-                    shortTimeDict.set(message.author.id, totalTime);
+            if(missedNum > 15){
+                if(goldenDuck){
+                    message.reply("You shot a **golden** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
+                    gainedPts = 5;
+                } else {
+                    message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
                 }
-                if((parseFloat(longTimeDict.get(message.author.id)) < totalTime) || parseFloat(longTimeDict.get(message.author.id)) === 12345.6789){
+                if(scoreDict.has(message.author.id)){
+                    scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
+                    if((parseFloat(shortTimeDict.get(message.author.id)) > totalTime) || parseFloat(shortTimeDict.get(message.author.id)) === 12345.6789){
+                        shortTimeDict.set(message.author.id, totalTime);
+                    }
+                    if((parseFloat(longTimeDict.get(message.author.id)) < totalTime) || parseFloat(longTimeDict.get(message.author.id)) === 12345.6789){
+                        longTimeDict.set(message.author.id, totalTime);
+                    }
+                } else {
+                    scoreDict.set(message.author.id, gainedPts);
+                    shortTimeDict.set(message.author.id, totalTime);
                     longTimeDict.set(message.author.id, totalTime);
                 }
+                duckHunt();
             } else {
-                scoreDict.set(message.author.id, gainedPts);
-                shortTimeDict.set(message.author.id, totalTime);
-                longTimeDict.set(message.author.id, totalTime);
+                message.reply("You missed the duck! Try again! -1 point (" + totalTime + " seconds)");
+                if(scoreDict.has(message.author.id)){
+                    scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
+                } else {
+                    scoreDict.set(message.author.id, -1);
+                    shortTimeDict.set(message.author.id, 12345.6789);
+                    longTimeDict.set(message.author.id, 12345.6789);
+                }
             }
-            duckHunt();
         } else {
             message.reply("There was no duck! -1 point (" + totalTime + " seconds)");
             if(scoreDict.has(message.author.id)){
