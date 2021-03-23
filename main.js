@@ -478,7 +478,7 @@ client.on('message', message =>{
                                 underTrial = null;
                                 trialMsg = null;
                             }
-                        }, 10000);
+                        }, 60000);
                     } else {
                         message.reply("That user is already jailed!");
                         underTrial = null;
