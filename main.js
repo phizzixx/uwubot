@@ -569,7 +569,7 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
-    duckRespawnTime = getRandomInt(2) + 1;
+    duckRespawnTime = getRandomInt(80) + 40;
     duckAlive = false;
     duckType = null;
     timer = 0;
