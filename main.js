@@ -715,7 +715,7 @@ function shoot(message){
                     gainedPts = 10;
                 } else if (duckType == 'diamond'){
                     message.reply("You shot a **diamond** duck! \\\\_x< | +100 points (" + totalTime + " seconds)");
-                    gainedPts = 5;
+                    gainedPts = 100;
                 } else if (duckType == 'dark'){
                     message.reply("You shot a **dark matter** duck! \\\\_x< | You lost **all** your points! (" + totalTime + " seconds)");
                     gainedPts = 0;
