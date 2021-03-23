@@ -36,7 +36,7 @@ const uploadFile = (filePath, bucketName, key) => {
 
 const client = new Discord.Client();
 
-const prefix = '$';
+const prefix = '%';
 
 barrels = getRandomInt(6);
 escaping = false;
