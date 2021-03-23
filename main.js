@@ -462,26 +462,35 @@ client.on('message', message =>{
             message.reply("You can't do that! You're not a sheriff!");
         }
     } else if (mainCommand == 'trial'){
-        if(message.mentions.users.first() != undefined) {
-            coinFlip = getRandomInt(2)
-            if(underTrial == null){
-                underTrial = message.author.id;
-                trialMsg = message;
-                uid = message.mentions.users.first().id;
-                message.channel.send('<@' + uid + '>, You are under trial! Quick, you only have 60 seconds! Choose either **heads** or **tails**!');
-                trialTimer = true;
-                setTimeout(function() {
-                    if(trialTimer){
-                        jail(trialMsg);
+        if(message.member.roles.cache.find(r => r.name === "Sheriff")){
+            if(message.mentions.users.first() != undefined) {
+                coinFlip = getRandomInt(2)
+                if(underTrial == null){
+                    underTrial = message.mentions.users.first().id;
+                    if(!message.guild.members.cache.get(underTrial).roles.cache.find(r => r.name === "Horny")){
+                        trialMsg = message;
+                        message.channel.send('<@' + underTrial + '>, You are under trial! Quick, you only have 60 seconds! Choose either **heads** or **tails**!');
+                        trialTimer = true;
+                        setTimeout(function() {
+                            if(trialTimer){
+                                jail(trialMsg);
+                                underTrial = null;
+                                underTrial = null;
+                                trialMsg = null;
+                            }
+                        }, 10000);
+                    } else {
+                        message.reply("That user is already jailed!");
                         underTrial = null;
-                        trialMsg = null;
                     }
-                }, 60000);
+                } else {
+                    message.reply("Someone else is already under trial!");
+                } 
             } else {
-                message.reply("Someone else is already under trial!");
+                message.reply("You have to mention a user!");
             }
         } else {
-            message.reply("You have to mention a user!");
+            message.reply("You have to be a sheriff!");
         }
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
@@ -613,10 +622,14 @@ function removeAllElements(array, array2, elem) {
 }
 
 function jail(message){
+    timedOut = false;
     uid = message.mentions.users.first().id;
+    msg = '<@' + uid + '>';
     if(uid == underTrial && trialTimer){
-        message.channel.send('<@' + uid + '>, You ran out of time!');
+        msg += (', You ran out of time! You have been jailed!');
+        message.channel.send(msg);
         trialTimer = false;
+        timedOut = true;
     }
     myRole = message.guild.roles.cache.find(role => role.name === "Horny");
     myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
@@ -626,9 +639,15 @@ function jail(message){
             if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
                 mentioned.roles.add(myRole)
                 mentioned.roles.add(myRole2)
-                message.channel.send('<@' + uid + '> has been jailed!');
+                if(!timedOut){
+                    msg += (' has been jailed!');
+                    message.channel.send(msg);
+                }
             } else {
-                message.channel.send('<@' + uid + '> is already jailed!');
+                if(!timedOut){
+                    msg += (' is already jailed!');
+                    message.channel.send(msg);
+                }
             }
         } else {
             message.reply("You can't do that! They're a sheriff!");
