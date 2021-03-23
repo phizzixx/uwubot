@@ -153,6 +153,9 @@ client.on('message', message =>{
             }
             break;
         case 'monke':
+            image(message);
+            break;
+        case 'jail':
             if((message.member.roles.cache.find(r => r.name === "Sheriff"))){
                 if(message.mentions.users.first() != undefined) {
                     jail(message);
