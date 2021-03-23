@@ -36,7 +36,7 @@ const uploadFile = (filePath, bucketName, key) => {
 
 const client = new Discord.Client();
 
-const prefix = '%';
+const prefix = '$';
 
 barrels = getRandomInt(6);
 escaping = false;
@@ -62,6 +62,14 @@ coinFlip = null;
 trialMsg = null;
 underTrial = null;
 trialTimer = null;
+
+challenger = null;
+challenged = null;
+jailDuel = false;
+askConfirmation = false;
+confirmed = false;
+duelSpawn = false;
+duelDict = new Map();
 
 client.once('ready', () =>{
     console.log('Bot is online!')
@@ -90,6 +98,14 @@ client.once('ready', () =>{
         if (!err) {
             jsonText = (json_data.Body).toString("utf8");
             scoreDict = new Map(JSON.parse(jsonText));
+        }
+    });
+    params = {Bucket: 'duckhuntgame', Key: 'duckhunt/duelScores.json'};
+    s3.getObject(params, function(err, json_data)
+    {
+        if (!err) {
+            jsonText = (json_data.Body).toString("utf8");
+            longTimeDict = new Map(JSON.parse(jsonText));
         }
     });
 });
@@ -223,7 +239,7 @@ client.on('message', message =>{
         if(duckAlive){
             missedNum = getRandomInt(100);
             gainedPts = 1;
-            if(missedNum > 10){
+            if(missedNum > 7){
                 if(duckType == 'silver'){
                     message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
                     gainedPts = 5;
@@ -506,6 +522,99 @@ client.on('message', message =>{
         } else {
             message.reply("You have to be a sheriff!");
         }
+    } else if ((mainCommand == 'duel') || (mainCommand == 'jailduel')) {
+        if(message.mentions.users.first() != undefined) {
+            if(!confirmed && !askConfirmation){
+                askConfirmation = true;
+                challenger = message.author.id;
+                challenged = message.mentions.users.first().id;
+                if(mainCommand == 'jailduel'){
+                    message.channel.send('<@' + challenged + '>, You have been challenged to a **jail** duel! If you lose, you will be sent to jail <:monkaS:782169582051786772> You have 60 seconds to respond. To accept, type %yes');
+                    jailDuel = true;
+                } else {
+                    message.channel.send('<@' + challenged + '>, You have been challenged to a duel! You have 60 seconds to respond. To accept, type %yes');
+                }
+                setTimeout(function() {
+                    if(!confirmed){
+                        message.reply("The user did not accept your challenge.");
+                        challenger = null;
+                        challenged = null;
+                        jailDuel = false;
+                        askConfirmation = false;
+                    }
+                }, 10000);
+            } else {
+                message.reply("There is currently a duel!");
+            }
+        } else {
+            message.reply("You have to mention a user!");
+        }
+    } else if (mainCommand == 'yes') {
+        if(askConfirmation && message.author.id == challenged){
+            confirmed = true;
+            message.channel.send('A duel between <@' + challenged + '> and <@' + challenger + '> is about to begin. Type %fire when you hear the signal!');
+            duel(message);
+        }
+    } else if (mainCommand = 'fire'){
+        if(message.author.id == challenger || message.author.id == challenged){
+            myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+            if(duelSpawn){
+                if(message.author.id == challenger){
+                    winner = challenger;
+                    loser = challenged;
+                } else {
+                    winner = challenged;
+                    loser = challenger;
+                }
+                if(jailDuel){
+                    message.channel.send('Congratulations <@' + winner + '>! You have won! <@' + loser + '> has been put into jail!');
+                    jailedUser = message.guild.members.cache.get(loser);
+                    jailedUser.roles.add(myRole);
+                    jailedUser.roles.add(myRole2);
+                } else {
+                    message.channel.send('Congratulations <@' + winner + '>! You have won! +1 point');
+                }
+
+                if(duelDict.has(winner)){
+                    duelDict.set(winner, duelDict.get(winner)+1);
+                } else {
+                    duelDict.set(winner, 1);
+                }
+                if(duelDict.has(loser)){
+                    duelDict.set(loser, duelDict.get(loser)-1);
+                } else {
+                    duelDict.set(loser, -1);
+                }
+            } else {
+                if(jailDuel){
+                    message.reply("You shot too early! You lose and have been put in jail.")
+                    jailedUser = message.guild.members.cache.get(message.author.id);
+                    jailedUser.roles.add(myRole);
+                    jailedUser.roles.add(myRole2);
+                } else {
+                    message.reply("You shot too early! You lose! -1 point");
+                }
+                
+                if(duelDict.has(message.author.id)){
+                    duelDict.set(message.author.id, duelDict.get(message.author.id)-1);
+                } else {
+                    duelDict.set(message.author.id, -1);
+                }
+            }
+
+            fs.writeFile('./duelScores.json', JSON.stringify(Array.from(duelDict.entries())), function(err) {
+                if(err) console.log(err)
+            })
+            uploadFile('./duelScores.json', 'duckhuntgame', 'duckhunt/duelScores.json');
+
+            challenger = null;
+            challenged = null;
+            jailDuel = false;
+            askConfirmation = false;
+            confirmed = false;
+            duelSpawn = false;
+        }
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -569,7 +678,7 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
-    duckRespawnTime = getRandomInt(80)+40;
+    duckRespawnTime = getRandomInt(2) + 1;
     duckAlive = false;
     duckType = null;
     timer = 0;
@@ -594,6 +703,16 @@ function spawnDuck(){
         }
         timer++;
     }
+}
+
+function duel(message){
+    duelTime = getRandomInt(30) + 30;
+    setTimeout(function() {
+        if(!confirmed){
+            message.reply("**__Fire Now!__**");
+            duelSpawn = true;
+        }
+    }, duelTime);
 }
 
 function urbDict(text, message, type){
