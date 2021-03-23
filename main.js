@@ -132,7 +132,7 @@ client.on('message', message =>{
         mainCommand = command.substr(0, command.indexOf(' '));
         splitCommand = command.substr(command.indexOf(' ') + 1);
     }
-    console.log(mainCommand);
+
     switch (mainCommand) {
         case 'override':
             if(message.member.roles.cache.find(r => r.name === "Sheriff")){
