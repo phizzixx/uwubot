@@ -518,6 +518,7 @@ client.on('message', message =>{
         helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard/leaderboard** - shows the top 10 duck hunt scores\n**%time(s) *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
         helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user\n**%addqueue [user]** - adds a user to the jackbox queue";
         helpString += "\n**%removequeue [user]** - removes a user from the jackbox queue\n**%rotate** - rotates the jackbox queue\n**%list/queue** - lists the jackbox queue\n**%randomize** - randomizes the jackbox list";
+        helpString += "\n**%trial [user]** - place a user on trial";
         message.reply(helpString);
     } else if(escaping && (message.member.roles.cache.find(r => r.name === "Roulette"))) {
         if(escaperID == message.author.id) {
