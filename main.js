@@ -223,7 +223,7 @@ client.on('message', message =>{
         if(duckAlive){
             missedNum = getRandomInt(100);
             gainedPts = 1;
-            if(missedNum > 7){
+            if(missedNum > 10){
                 if(duckType == 'silver'){
                     message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
                     gainedPts = 5;
