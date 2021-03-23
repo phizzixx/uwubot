@@ -604,6 +604,71 @@ client.on('message', message =>{
     }
 })
 
+function image(message){
+    var options = {
+        url : "http://results.dogpile.com/serp?qc=images&q=" + "monkey",
+        method: "GET",
+        headers: {
+            "Accept": "text/html",
+            "User-Agent": "Chrome"
+        }
+    };
+    request(options, function(error, response, responseBody){
+        if (error) {
+            return;
+        }
+        $ = cheerio.load(responseBody);
+        var links = $(".image a.link");
+        var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
+        if(!urls.length){
+            return;
+        }
+        message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
+    });
+}
+
+function jail(message){
+    timedOut = false;
+    uid = message.mentions.users.first().id;
+    msg = '<@' + uid + '>';
+    if(uid == underTrial && trialTimer){
+        msg += (', You ran out of time! You have been jailed!');
+        message.channel.send(msg);
+        trialTimer = false;
+        timedOut = true;
+    }
+    myRole = message.guild.roles.cache.find(role => role.name === "Horny");
+    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+    mentioned = message.guild.members.cache.get(uid)
+    if(!(mentioned.roles.cache.find(r => r.name === "Roulette"))){
+        if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
+            if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
+                mentioned.roles.add(myRole)
+                mentioned.roles.add(myRole2)
+                if(!timedOut){
+                    msg += (' has been jailed!');
+                    message.channel.send(msg);
+                }
+            } else {
+                if(!timedOut){
+                    msg += (' is already jailed!');
+                    message.channel.send(msg);
+                }
+            }
+        } else {
+            message.reply("You can't do that! They're a sheriff!");
+        }
+    } else {
+        myRole3 = message.guild.roles.cache.find(role => role.name === "Roulette");
+        mentioned.roles.remove(myRole3)
+        mentioned.roles.add(myRole)
+        if(uid === escaperID) {
+            escaping = false;
+        }
+        message.reply("Roulette status has been removed, and <@" + uid + "> has been jailed.");
+    }
+}
+
 function duckHunt(){
     duckRespawnTime = getRandomInt(80) + 40;
     duckAlive = false;
@@ -622,7 +687,9 @@ function spawnDuck(){
                 duckType = 'golden';
             } else if (chance > 1400 && chance <= 1440) {
                 duckType = 'diamond';
-            } else if (chance == 1441) {
+            } else if (chance > 1440 && chance <= 1450) {
+                duckType = 'emerald';
+            } else if (chance == 1451) {
                 duckType = 'dark';
             }
             client.channels.cache.find(ch => ch.name === 'duck-hunt').send("\\\\_o< quack!");
@@ -630,76 +697,6 @@ function spawnDuck(){
         }
         timer++;
     }
-}
-
-function duel(message){
-    duelTime = getRandomInt(30) + 30;
-    setTimeout(function() {
-        if(!confirmed){
-            message.reply("**__Fire Now!__**");
-            duelSpawn = true;
-        }
-    }, duelTime);
-}
-
-function duelTrigger(message, mainCommand){
-    if(message.mentions.users.first() != undefined) {
-        if(!confirmed && !askConfirmation){
-            askConfirmation = true;
-            challenger = message.author.id;
-            challenged = message.mentions.users.first().id;
-            if(mainCommand == 'jailduel'){
-                message.channel.send('<@' + challenged + '>, You have been challenged to a **jail** duel! If you lose, you will be sent to jail <:monkaS:782169582051786772> You have 60 seconds to respond. To accept, type %yes');
-                jailDuel = true;
-            } else {
-                message.channel.send('<@' + challenged + '>, You have been challenged to a duel! You have 60 seconds to respond. To accept, type %yes');
-            }
-            setTimeout(function() {
-                if(!confirmed){
-                    message.reply("The user did not accept your challenge.");
-                    challenger = null;
-                    challenged = null;
-                    jailDuel = false;
-                    askConfirmation = false;
-                }
-            }, 10000);
-        } else {
-            message.reply("There is currently a duel!");
-        }
-    } else {
-        message.reply("You have to mention a user!");
-    }
-}
-
-function urbDict(text, message, type){
-    ud.define(text, (error, results) => {
-        if (error) {
-            ud.autocomplete(text, (error, results) => {
-                if (error) {
-                    console.error(`autocomplete (callback) error - ${error.message}`)
-                    return
-                }  
-                text = (results[0]);
-                ud.define(text, (error, results) => {
-                    if (error) {
-                      console.error(`define (callback) error - ${error.message}`)
-                      return
-                    }
-                    if(type == "def"){
-                        message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
-                    } else {
-                        message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
-                    }
-                  })
-            })
-            return
-        }
-        if(type == "def"){
-            message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
-        } else {
-            message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
-        }
-    })
 }
 
 function shoot(message){
@@ -719,6 +716,9 @@ function shoot(message){
                 } else if (duckType == 'diamond'){
                     message.reply("You shot a **diamond** duck! \\\\_x< | +100 points (" + totalTime + " seconds)");
                     gainedPts = 100;
+                } else if (duckType == 'emerald'){
+                    message.reply("You shot a **emerald** duck! \\\\_x< | +250 points (" + totalTime + " seconds)");
+                    gainedPts = 250;
                 } else if (duckType == 'dark'){
                     message.reply("You shot a **dark matter** duck! \\\\_x< | You lost **all** your points! (" + totalTime + " seconds)");
                     gainedPts = 0;
@@ -786,6 +786,37 @@ function shoot(message){
     }
 }
 
+function urbDict(text, message, type){
+    ud.define(text, (error, results) => {
+        if (error) {
+            ud.autocomplete(text, (error, results) => {
+                if (error) {
+                    console.error(`autocomplete (callback) error - ${error.message}`)
+                    return
+                }  
+                text = (results[0]);
+                ud.define(text, (error, results) => {
+                    if (error) {
+                      console.error(`define (callback) error - ${error.message}`)
+                      return
+                    }
+                    if(type == "def"){
+                        message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
+                    } else {
+                        message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
+                    }
+                  })
+            })
+            return
+        }
+        if(type == "def"){
+            message.channel.send("**" + results[0].word + "**:\n" + results[0].definition);
+        } else {
+            message.channel.send("**" + results[0].word + "**:\n" + results[0].example);
+        }
+    })
+}
+
 function jackbox(message, mainCommand){
     oldList = jackboxList;
     if(mainCommand == 'rotate'){
@@ -811,6 +842,45 @@ function jackbox(message, mainCommand){
     message.channel.send(msg);
 }
 
+function duelTrigger(message, mainCommand){
+    if(message.mentions.users.first() != undefined) {
+        if(!confirmed && !askConfirmation){
+            askConfirmation = true;
+            challenger = message.author.id;
+            challenged = message.mentions.users.first().id;
+            if(mainCommand == 'jailduel'){
+                message.channel.send('<@' + challenged + '>, You have been challenged to a **jail** duel! If you lose, you will be sent to jail <:monkaS:782169582051786772> You have 60 seconds to respond. To accept, type %yes');
+                jailDuel = true;
+            } else {
+                message.channel.send('<@' + challenged + '>, You have been challenged to a duel! You have 60 seconds to respond. To accept, type %yes');
+            }
+            setTimeout(function() {
+                if(!confirmed){
+                    message.reply("The user did not accept your challenge.");
+                    challenger = null;
+                    challenged = null;
+                    jailDuel = false;
+                    askConfirmation = false;
+                }
+            }, 10000);
+        } else {
+            message.reply("There is currently a duel!");
+        }
+    } else {
+        message.reply("You have to mention a user!");
+    }
+}
+
+function duel(message){
+    duelTime = getRandomInt(30) + 30;
+    setTimeout(function() {
+        if(!confirmed){
+            message.reply("**__Fire Now!__**");
+            duelSpawn = true;
+        }
+    }, duelTime);
+}
+
 function getRandomInt(max) {
     return (Math.floor(Math.random() * Math.floor(max)) + 1);
 }
@@ -823,48 +893,6 @@ function removeAllElements(array, array2, elem) {
             array2.splice(index, 1);
         }
         index = array.indexOf(elem);
-    }
-}
-
-function jail(message){
-    timedOut = false;
-    uid = message.mentions.users.first().id;
-    msg = '<@' + uid + '>';
-    if(uid == underTrial && trialTimer){
-        msg += (', You ran out of time! You have been jailed!');
-        message.channel.send(msg);
-        trialTimer = false;
-        timedOut = true;
-    }
-    myRole = message.guild.roles.cache.find(role => role.name === "Horny");
-    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-    mentioned = message.guild.members.cache.get(uid)
-    if(!(mentioned.roles.cache.find(r => r.name === "Roulette"))){
-        if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
-            if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
-                mentioned.roles.add(myRole)
-                mentioned.roles.add(myRole2)
-                if(!timedOut){
-                    msg += (' has been jailed!');
-                    message.channel.send(msg);
-                }
-            } else {
-                if(!timedOut){
-                    msg += (' is already jailed!');
-                    message.channel.send(msg);
-                }
-            }
-        } else {
-            message.reply("You can't do that! They're a sheriff!");
-        }
-    } else {
-        myRole3 = message.guild.roles.cache.find(role => role.name === "Roulette");
-        mentioned.roles.remove(myRole3)
-        mentioned.roles.add(myRole)
-        if(uid === escaperID) {
-            escaping = false;
-        }
-        message.reply("Roulette status has been removed, and <@" + uid + "> has been jailed.");
     }
 }
 
@@ -885,29 +913,6 @@ function shuffle(array) {
     }
 
     return array;
-}
-
-function image(message){
-    var options = {
-        url : "http://results.dogpile.com/serp?qc=images&q=" + "monkey",
-        method: "GET",
-        headers: {
-            "Accept": "text/html",
-            "User-Agent": "Chrome"
-        }
-    };
-    request(options, function(error, response, responseBody){
-        if (error) {
-            return;
-        }
-        $ = cheerio.load(responseBody);
-        var links = $(".image a.link");
-        var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
-        if(!urls.length){
-            return;
-        }
-        message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
-    });
 }
 
 client.login(process.env.BOT_TOKEN);
