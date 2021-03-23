@@ -74,7 +74,7 @@ duelDict = new Map();
 client.once('ready', () =>{
     console.log('Bot is online!')
     duckHunt();
-    setInterval(spawnDuck, 1000);
+    setInterval(spawnDuck, 5000);
 
     params = {Bucket: 'duckhuntgame', Key: 'duckhunt/longestTimes.json'};
     s3.getObject(params, function(err, json_data)
@@ -678,7 +678,7 @@ function duckHunt(){
 
 function spawnDuck(){
     if(!duckAlive){
-        if(timer === duckRespawnTime){
+        if(timer >= duckRespawnTime){
             duckAlive = true;
             chance = getRandomInt(10000)
             if(chance <= 1000){
@@ -695,7 +695,7 @@ function spawnDuck(){
             client.channels.cache.find(ch => ch.name === 'duck-hunt').send("\\\\_o< quack!");
             t0 = performance.now();
         }
-        timer++;
+        timer+=5;
     }
 }
 
