@@ -480,6 +480,28 @@ client.on('message', message =>{
         } else {
             message.reply("You can't do that! You're not a sheriff!");
         }
+    } else if (mainCommand == 'trial'){
+        if(message.mentions.users.first() != undefined) {
+            coinFlip = getRandomInt(2)
+            if(underTrial == null){
+                underTrial = message.author.id;
+                trialMsg = message;
+                uid = message.mentions.users.first().id;
+                message.channel.send('<@' + uid + '>, You are under trial! Quick, you only have 60 seconds! Choose either **heads** or **tails**!');
+                trialTimer = true;
+                setTimeout(function() {
+                    if(trialTimer){
+                        jail(trialMsg);
+                        underTrial = null;
+                        trialMsg = null;
+                    }
+                }, 60000);
+            } else {
+                message.reply("Someone else is already under trial!");
+            }
+        } else {
+            message.reply("You have to mention a user!");
+        }
     } else if (mainCommand == 'pet') {
         let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
         petNum = getRandomInt(16)-1;
@@ -516,6 +538,27 @@ client.on('message', message =>{
             }
         } else {
             message.reply('Please wait for the other person to escape first.');
+        }
+    } else if((underTrial != null) && (message.author.id == underTrial)){
+        input = null;
+        if (mainCommand == 'heads'){
+            input = 1;
+        } else if(mainCommand == 'tails') {
+            input = 2;
+        }
+        if(input != null){
+            if(input == coinFlip){
+                underTrial = null;
+                trialMsg = null;
+                trialTimer = false;
+                message.reply('Correct! You have been found innocent! You are free to go!');
+            } else {
+                message.reply('Incorrect! You have been found guilty!');
+                underTrial = null;
+                trialTimer = false;
+                jail(trialMsg);
+                trialMsg = null;
+            }
         }
     }
 })
@@ -584,6 +627,38 @@ function removeAllElements(array, array2, elem) {
             array2.splice(index, 1);
         }
         index = array.indexOf(elem);
+    }
+}
+
+function jail(message){
+    uid = message.mentions.users.first().id;
+    if(uid == underTrial && trialTimer){
+        message.channel.send('<@' + uid + '>, You ran out of time!');
+        trialTimer = false;
+    }
+    myRole = message.guild.roles.cache.find(role => role.name === "Horny");
+    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+    mentioned = message.guild.members.cache.get(uid)
+    if(!(mentioned.roles.cache.find(r => r.name === "Roulette"))){
+        if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
+            if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
+                mentioned.roles.add(myRole)
+                mentioned.roles.add(myRole2)
+                message.channel.send('<@' + uid + '> has been jailed!');
+            } else {
+                message.channel.send('<@' + uid + '> is already jailed!');
+            }
+        } else {
+            message.reply("You can't do that! They're a sheriff!");
+        }
+    } else {
+        myRole3 = message.guild.roles.cache.find(role => role.name === "Roulette");
+        mentioned.roles.remove(myRole3)
+        mentioned.roles.add(myRole)
+        if(uid === escaperID) {
+            escaping = false;
+        }
+        message.reply("Roulette status has been removed, and <@" + uid + "> has been jailed.");
     }
 }
 
