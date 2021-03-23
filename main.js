@@ -105,7 +105,7 @@ client.once('ready', () =>{
     {
         if (!err) {
             jsonText = (json_data.Body).toString("utf8");
-            longTimeDict = new Map(JSON.parse(jsonText));
+            duelDict = new Map(JSON.parse(jsonText));
         }
     });
 });
