@@ -291,8 +291,8 @@ client.on('message', message =>{
             break;
         case 'scoreboard':
             scoreDict = new Map([...scoreDict.entries()].sort((a, b) => b[1] - a[1]));
-            let keys = Array.from(scoreDict.keys());
-            let values = Array.from(scoreDict.values());
+            keys = Array.from(scoreDict.keys());
+            values = Array.from(scoreDict.values());
             msg = "**__Leaderboard__:**\n"
             for (var i = 0; i < 10; i++) {
                 if (keys.length < i+1){
