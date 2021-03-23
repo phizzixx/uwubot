@@ -74,7 +74,7 @@ duelDict = new Map();
 client.once('ready', () =>{
     console.log('Bot is online!')
     duckHunt();
-    setInterval(spawnDuck, 1000);
+    setInterval(spawnDuck, 5000);
 
     params = {Bucket: 'duckhuntgame', Key: 'duckhunt/longestTimes.json'};
     s3.getObject(params, function(err, json_data)
