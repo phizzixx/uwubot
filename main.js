@@ -36,7 +36,7 @@ const uploadFile = (filePath, bucketName, key) => {
 
 const client = new Discord.Client();
 
-const prefix = '%';
+const prefix = '$';
 
 barrels = getRandomInt(6);
 escaping = false;
@@ -57,6 +57,11 @@ goldenDuck = null;
 scoreDict = new Map();
 shortTimeDict = new Map();
 longTimeDict = new Map();
+
+coinFlip = null;
+trialMsg = null;
+underTrial = null;
+trialTimer = null;
 
 client.once('ready', () =>{
     console.log('Bot is online!')
@@ -131,31 +136,7 @@ client.on('message', message =>{
         image(message);
     } else if ((mainCommand == 'jail') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
         if(message.mentions.users.first() != undefined) {
-            uid = message.mentions.users.first().id;
-            myRole = message.guild.roles.cache.find(role => role.name === "Horny");
-            myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-            mentioned = message.guild.members.cache.get(uid)
-            if(!(mentioned.roles.cache.find(r => r.name === "Roulette"))){
-                if(!mentioned.roles.cache.find(r => r.name === "Sheriff")){
-                    if(!mentioned.roles.cache.find(r => r.name === "Horny")) {
-                        mentioned.roles.add(myRole)
-                        mentioned.roles.add(myRole2)
-                        message.channel.send('<@' + uid + '> has been jailed!');
-                    } else {
-                        message.channel.send('<@' + uid + '> is already jailed!');
-                    }
-                } else {
-                    message.reply("You can't do that! They're a sheriff!");
-                }
-            } else {
-                    myRole3 = message.guild.roles.cache.find(role => role.name === "Roulette");
-                    mentioned.roles.remove(myRole3)
-                    mentioned.roles.add(myRole)
-                    if(uid === escaperID) {
-                        escaping = false;
-                    }
-                    message.reply("Roulette status has been removed, and <@" + uid + "> has been jailed.");
-            }
+            jail(message);
         }
     } else if ((mainCommand == 'free') && (message.member.roles.cache.find(r => r.name === "Sheriff"))){
         if(message.mentions.users.first() != undefined) {
