@@ -702,84 +702,84 @@ function urbDict(text, message, type){
 function shoot(message){
     if(message.channel === client.channels.cache.find(ch => ch.name === 'duck-hunt')){
         t1 = performance.now();
-            totalTime = ((t1 - t0)/1000).toFixed(3);
-            if(duckAlive){
-                missedNum = getRandomInt(100);
-                gainedPts = 1;
-                if(missedNum > 7){
-                    if(duckType == 'silver'){
-                        message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
-                        gainedPts = 5;
-                    } else if (duckType == 'golden'){
-                        message.reply("You shot a **golden** duck! \\\\_x< | +10 points (" + totalTime + " seconds)");
-                        gainedPts = 10;
-                    } else if (duckType == 'diamond'){
-                        message.reply("You shot a **diamond** duck! \\\\_x< | +100 points (" + totalTime + " seconds)");
-                        gainedPts = 5;
-                    } else if (duckType == 'dark'){
-                        message.reply("You shot a **dark matter** duck! \\\\_x< | You lost **all** your points! (" + totalTime + " seconds)");
-                        gainedPts = 0;
-                    } else {
-                        message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
-                    }
+        totalTime = ((t1 - t0)/1000).toFixed(3);
+        if(duckAlive){
+            missedNum = getRandomInt(100);
+            gainedPts = 1;
+            if(missedNum > 7){
+                if(duckType == 'silver'){
+                    message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
+                    gainedPts = 5;
+                } else if (duckType == 'golden'){
+                    message.reply("You shot a **golden** duck! \\\\_x< | +10 points (" + totalTime + " seconds)");
+                    gainedPts = 10;
+                } else if (duckType == 'diamond'){
+                    message.reply("You shot a **diamond** duck! \\\\_x< | +100 points (" + totalTime + " seconds)");
+                    gainedPts = 5;
+                } else if (duckType == 'dark'){
+                    message.reply("You shot a **dark matter** duck! \\\\_x< | You lost **all** your points! (" + totalTime + " seconds)");
+                    gainedPts = 0;
+                } else {
+                    message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
+                }
 
-                    if(scoreDict.has(message.author.id)){
-                        if(gainedPts == 0){
-                            scoreDict.set(message.author.id, 0);
-                        } else {
-                            scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
-                        }
-                        if((parseFloat(shortTimeDict.get(message.author.id)) > totalTime) || parseFloat(shortTimeDict.get(message.author.id)) === 12345.6789){
-                            shortTimeDict.set(message.author.id, totalTime);
-                        }
-                        if((parseFloat(longTimeDict.get(message.author.id)) < totalTime) || parseFloat(longTimeDict.get(message.author.id)) === 12345.6789){
-                            longTimeDict.set(message.author.id, totalTime);
-                        }
+                if(scoreDict.has(message.author.id)){
+                    if(gainedPts == 0){
+                        scoreDict.set(message.author.id, 0);
                     } else {
-                        scoreDict.set(message.author.id, gainedPts);
+                        scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
+                    }
+                    if((parseFloat(shortTimeDict.get(message.author.id)) > totalTime) || parseFloat(shortTimeDict.get(message.author.id)) === 12345.6789){
                         shortTimeDict.set(message.author.id, totalTime);
+                    }
+                    if((parseFloat(longTimeDict.get(message.author.id)) < totalTime) || parseFloat(longTimeDict.get(message.author.id)) === 12345.6789){
                         longTimeDict.set(message.author.id, totalTime);
                     }
-                    duckHunt();
                 } else {
-                    message.reply("You **missed** the duck! Try again! -1 point (" + totalTime + " seconds)");
-                    if(scoreDict.has(message.author.id)){
-                        scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
-                    } else {
-                        scoreDict.set(message.author.id, -1);
-                        shortTimeDict.set(message.author.id, 12345.6789);
-                        longTimeDict.set(message.author.id, 12345.6789);
-                    }
+                    scoreDict.set(message.author.id, gainedPts);
+                    shortTimeDict.set(message.author.id, totalTime);
+                    longTimeDict.set(message.author.id, totalTime);
                 }
+                duckHunt();
             } else {
-                message.reply("There was no duck! -1 point (" + totalTime + " seconds)");
+                message.reply("You **missed** the duck! Try again! -1 point (" + totalTime + " seconds)");
                 if(scoreDict.has(message.author.id)){
                     scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
-                    if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
-                        message.reply("You have been placed in jail for repeatedly missing! You can escape with %escape")
-                        myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
-                        myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
-                        message.member.roles.add(myRole);
-                        message.member.roles.add(myRole2);
-                    }
                 } else {
                     scoreDict.set(message.author.id, -1);
                     shortTimeDict.set(message.author.id, 12345.6789);
                     longTimeDict.set(message.author.id, 12345.6789);
                 }
             }
-            fs.writeFile('./duckhunt/scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
-                if(err) console.log(err)
-            })
-            fs.writeFile('./duckhunt/shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
-                if(err) console.log(err)
-            })
-            fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
-                if(err) console.log(err)
-            })
-            uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
-            uploadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
-            uploadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
+        } else {
+            message.reply("There was no duck! -1 point (" + totalTime + " seconds)");
+            if(scoreDict.has(message.author.id)){
+                scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
+                if(parseFloat(scoreDict.get(message.author.id)) < parseFloat(-7)){
+                    message.reply("You have been placed in jail for repeatedly missing! You can escape with %escape")
+                    myRole = message.guild.roles.cache.find(role => role.name === "Roulette");
+                    myRole2 = message.guild.roles.cache.find(role => role.name === "Muted");
+                    message.member.roles.add(myRole);
+                    message.member.roles.add(myRole2);
+                }
+            } else {
+                scoreDict.set(message.author.id, -1);
+                shortTimeDict.set(message.author.id, 12345.6789);
+                longTimeDict.set(message.author.id, 12345.6789);
+            }
+        }
+        fs.writeFile('./duckhunt/scores.json', JSON.stringify(Array.from(scoreDict.entries())), function(err) {
+            if(err) console.log(err)
+        })
+        fs.writeFile('./duckhunt/shortestTimes.json', JSON.stringify(Array.from(shortTimeDict.entries())), function(err) {
+            if(err) console.log(err)
+        })
+        fs.writeFile('./duckhunt/longestTimes.json', JSON.stringify(Array.from(longTimeDict.entries())), function(err) {
+            if(err) console.log(err)
+        })
+        uploadFile('./duckhunt/scores.json', 'duckhuntgame', 'duckhunt/scores.json');
+        uploadFile('./duckhunt/shortestTimes.json', 'duckhuntgame', 'duckhunt/shortestTimes.json');
+        uploadFile('./duckhunt/longestTimes.json', 'duckhuntgame', 'duckhunt/longestTimes.json');
     }
 }
 
