@@ -53,7 +53,7 @@ t0 = null;
 t1 = null;
 duckRespawnTime = null;
 duckAlive = null;
-goldenDuck = null;
+duckType = null;
 scoreDict = new Map();
 shortTimeDict = new Map();
 longTimeDict = new Map();
@@ -223,15 +223,29 @@ client.on('message', message =>{
         if(duckAlive){
             missedNum = getRandomInt(100);
             gainedPts = 1;
-            if(missedNum > 15){
-                if(goldenDuck){
-                    message.reply("You shot a **golden** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
+            if(missedNum > 7){
+                if(duckType == 'silver'){
+                    message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
                     gainedPts = 5;
+                } else if (duckType == 'golden'){
+                    message.reply("You shot a **golden** duck! \\\\_x< | +10 points (" + totalTime + " seconds)");
+                    gainedPts = 10;
+                } else if (duckType == 'diamond'){
+                    message.reply("You shot a **diamond** duck! \\\\_x< | +100 points (" + totalTime + " seconds)");
+                    gainedPts = 5;
+                } else if (duckType == 'dark'){
+                    message.reply("You shot a **dark matter** duck! \\\\_x< | You lost **all** your points! (" + totalTime + " seconds)");
+                    gainedPts = 0;
                 } else {
                     message.reply("You shot the duck! \\\\_x< | +1 point (" + totalTime + " seconds)");
                 }
+
                 if(scoreDict.has(message.author.id)){
-                    scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
+                    if(gainedPts == 0){
+                        scoreDict.set(message.author.id, 0);
+                    } else {
+                        scoreDict.set(message.author.id, scoreDict.get(message.author.id)+gainedPts);
+                    }
                     if((parseFloat(shortTimeDict.get(message.author.id)) > totalTime) || parseFloat(shortTimeDict.get(message.author.id)) === 12345.6789){
                         shortTimeDict.set(message.author.id, totalTime);
                     }
@@ -245,7 +259,7 @@ client.on('message', message =>{
                 }
                 duckHunt();
             } else {
-                message.reply("You missed the duck! Try again! -1 point (" + totalTime + " seconds)");
+                message.reply("You **missed** the duck! Try again! -1 point (" + totalTime + " seconds)");
                 if(scoreDict.has(message.author.id)){
                     scoreDict.set(message.author.id, scoreDict.get(message.author.id)-1);
                 } else {
@@ -555,9 +569,9 @@ client.on('message', message =>{
 })
 
 function duckHunt(){
-    duckRespawnTime = getRandomInt(80) + 40;
+    duckRespawnTime = getRandomInt(2) + 1;
     duckAlive = false;
-    goldenDuck = false;
+    duckType = null;
     timer = 0;
 }
 
@@ -565,10 +579,17 @@ function spawnDuck(){
     if(!duckAlive){
         if(timer === duckRespawnTime){
             duckAlive = true;
-            if(getRandomInt(100) <= 7){
-                goldenDuck = true;
+            chance = getRandomInt(10000)
+            if(chance <= 1000){
+                duckType = 'silver';
+            } else if (chance > 1000 && chance <= 1400) {
+                duckType = 'golden';
+            } else if (chance > 1400 && chance <= 1440) {
+                duckType = 'diamond';
+            } else if (chance == 1441) {
+                duckType = 'dark';
             }
-            client.channels.cache.find(ch => ch.name === 'duck-hunt').send("\\\\_o< quack!");
+            client.channels.cache.find(ch => ch.name === 'gen').send("\\\\_o< quack!");
             t0 = performance.now();
         }
         timer++;
