@@ -65,6 +65,7 @@ trialTimer = null;
 
 challenger = null;
 challenged = null;
+duelTime = null;
 jailDuel = false;
 askConfirmation = false;
 confirmed = false;
@@ -473,7 +474,8 @@ client.on('message', message =>{
         case 'yes':
             if(askConfirmation && message.author.id == challenged){
                 confirmed = true;
-                message.channel.send('A duel between <@' + challenged + '> and <@' + challenger + '> is about to begin. Type %fire when you hear the signal!');
+                askConfirmation = false;
+                message.channel.send('A duel between <@' + challenged + '> and <@' + challenger + '> is about to begin. Type **%fire** when you hear the signal!');
                 duel(message);
             }
             break;
@@ -497,16 +499,22 @@ client.on('message', message =>{
                     } else {
                         message.channel.send('Congratulations <@' + winner + '>! You have won! +1 point');
                     }
-    
+
                     if(duelDict.has(winner)){
-                        duelDict.set(winner, duelDict.get(winner)+1);
+                        list = duelDict.get(winner).split(' ');
+                        string = ((parseInt(list[0])+1) + ' ' + (parseInt(list[1])));
+                        duelDict.set(winner, string);
                     } else {
-                        duelDict.set(winner, 1);
+                        string = (1 + ' ' + 0);
+                        duelDict.set(winner, string);
                     }
                     if(duelDict.has(loser)){
-                        duelDict.set(loser, duelDict.get(loser)-1);
+                        list = duelDict.get(loser).split(' ');
+                        string = (parseInt(list[0]) + ' ' + (parseInt(list[1])+1));
+                        duelDict.set(loser, string);
                     } else {
-                        duelDict.set(loser, -1);
+                        string = (0 + ' ' + 1);
+                        duelDict.set(loser, string);
                     }
                 } else {
                     if(jailDuel){
@@ -532,11 +540,107 @@ client.on('message', message =>{
     
                 challenger = null;
                 challenged = null;
+                duelTime = null;
                 jailDuel = false;
                 askConfirmation = false;
                 confirmed = false;
                 duelSpawn = false;
             }
+            break;
+        case 'duelscore':
+            if(message.mentions.users.first() != undefined) {
+                uid = message.mentions.users.first().id;
+                uNick = client.users.cache.get(uid).username;
+                if(uNick[uNick.length-1] === 's'){
+                    uNick = uNick + "\'";
+                } else {
+                    uNick = uNick + "\'s";
+                }
+                if(duelDict.has(uid)){
+                    list = duelDict.get(uid).split(' ');
+                    message.channel.send("**" + uNick + " Wins**: " + list[0] + "\n**" + uNick + " Losses**: " + list[1]);
+                } else {
+                    message.channel.send("They haven't been in a duel yet!");
+                }
+            } else {
+                uid = message.author.id;
+                uNick = client.users.cache.get(uid).username;
+                if(uNick[uNick.length-1] === 's'){
+                    uNick = uNick + "\'";
+                } else {
+                    uNick = uNick + "\'s";
+                }
+                if(duelDict.has(uid)){
+                    list = duelDict.get(uid).split (' ');
+                    message.channel.send("**" + uNick + " Wins**: " + list[0] + "\n**" + uNick + " Losses**: " + list[1]);
+                } else {
+                    message.channel.send("You haven't been in a duel yet!");
+                }
+            }
+            break;
+        case 'duelboard':
+            keys = Array.from(duelDict.keys());
+            wins = [];
+            losses = [];
+            for(var i = 0; i < 5; i++){
+                if (keys.length < i+1){
+                    break;
+                }
+                uid = keys[i];
+                list = duelDict.get(uid).split(' ');
+                wins[i] = list[0];
+                losses[i] = list[1];
+            }
+
+            list = [];
+            for (var i = 0; i < keys.length; i++) {
+                list.push({'id': keys[i], 'wins': wins[i]});
+            }
+            list.sort(function(a, b) {
+                return b.wins - a.wins;
+            });
+            values = []
+            for (var i = 0; i < list.length; i++) {
+                keys[i] = list[i].id;
+                values[i] = list[i].wins;
+            }
+
+            msg = "**__Most Wins__:**\n"
+            for (var i = 0; i < 5; i++) {
+                if (keys.length < i+1){
+                    break;
+                }
+                key = keys[i];
+                value = values[i];
+                uNick = client.users.cache.get(key).username;
+                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "\n");
+            }
+
+            keys = Array.from(duelDict.keys());
+            list = [];
+            for (var i = 0; i < keys.length; i++) {
+                list.push({'id': keys[i], 'losses': losses[i]});
+            }
+            list.sort(function(a, b) {
+                return b.losses - a.losses;
+            });
+            values = []
+            for (var i = 0; i < list.length; i++) {
+                keys[i] = list[i].id;
+                values[i] = list[i].losses;
+            }
+
+            msg += "**__Most Losses__:**\n"
+            for (var i = 0; i < 5; i++) {
+                if (keys.length < i+1){
+                    break;
+                }
+                key = keys[i];
+                value = values[i]
+                uNick = client.users.cache.get(key).username;
+                msg += ("**" + (i+1) + ". " + uNick + "**: " + value + "\n");
+            }
+            message.channel.send(msg);
             break;
         case 'pet':
             let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
@@ -552,10 +656,11 @@ client.on('message', message =>{
             helpString += "\n**%roulette** - shoots from a revolver with 1 bullet in the 6 chamber barrel\n**%escape** - answer the question to free yourself after being shot\n**%override** - remove a current escape attempt";
             helpString += "\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary";
             helpString += "\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary'\n**%shoot/bang** - shoots the duck (if there is one)";
-            helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard/leaderboard** - shows the top 10 duck hunt scores\n**%time(s) *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
+            helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard** - shows the top 10 duck hunt scores\n**%times *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
             helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user\n**%addqueue [user]** - adds a user to the jackbox queue";
             helpString += "\n**%removequeue [user]** - removes a user from the jackbox queue\n**%rotate** - rotates the jackbox queue\n**%list/queue** - lists the jackbox queue\n**%randomize** - randomizes the jackbox list";
-            helpString += "\n**%trial [user]** - place a user on trial";
+            helpString += "\n**%trial [user]** - place a user on trial\n**%duel [user]** - engage in a duel with another user\n**%jailduel [user]** - engage in a duel, but be sent to jail if you lose";
+            helpString += "\n**%duelscore *[user]*** - shows the duel wins and losses of the user or mentioned user\n**%duelboard *** - shows the the top 5 duel winners and losers";
             message.reply(helpString);
             break;
         default:
@@ -845,24 +950,28 @@ function jackbox(message, mainCommand){
 function duelTrigger(message, mainCommand){
     if(message.mentions.users.first() != undefined) {
         if(!confirmed && !askConfirmation){
+            t3 = performance.now();
             askConfirmation = true;
             challenger = message.author.id;
             challenged = message.mentions.users.first().id;
             if(mainCommand == 'jailduel'){
-                message.channel.send('<@' + challenged + '>, You have been challenged to a **jail** duel! If you lose, you will be sent to jail <:monkaS:782169582051786772> You have 60 seconds to respond. To accept, type %yes');
+                message.channel.send('<@' + challenged + '>, You have been challenged to a **jail** duel! If you lose, you will be sent to jail <:monkaS:782169582051786772> You have 60 seconds to respond. To accept, type **%yes**');
                 jailDuel = true;
             } else {
-                message.channel.send('<@' + challenged + '>, You have been challenged to a duel! You have 60 seconds to respond. To accept, type %yes');
+                message.channel.send('<@' + challenged + '>, You have been challenged to a duel! You have 60 seconds to respond. To accept, type **%yes**');
             }
             setTimeout(function() {
-                if(!confirmed){
+                t4 = performance.now();
+                if(askConfirmation && !(parseFloat((t4-t3)/1000)<60)){
                     message.reply("The user did not accept your challenge.");
                     challenger = null;
                     challenged = null;
                     jailDuel = false;
                     askConfirmation = false;
+                    confirmed = false;
+                    duelSpawn = false;
                 }
-            }, 10000);
+            }, 61000);
         } else {
             message.reply("There is currently a duel!");
         }
@@ -872,13 +981,13 @@ function duelTrigger(message, mainCommand){
 }
 
 function duel(message){
-    duelTime = getRandomInt(30) + 30;
+    duelTime = getRandomInt(40) + 20;
     setTimeout(function() {
-        if(!confirmed){
-            message.reply("**__Fire Now!__**");
+        if(confirmed){
+            message.channel.send("**__Fire Now!__**");
             duelSpawn = true;
         }
-    }, duelTime);
+    }, (duelTime*1000));
 }
 
 function getRandomInt(max) {
