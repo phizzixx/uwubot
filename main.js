@@ -812,7 +812,6 @@ function spawnDuck(){
             } else if (chance == 1451) {
                 duckType = 'dark';
             }
-            duckType = 'emerald';
             client.channels.cache.find(ch => ch.name === 'duck-hunt').send("\\\\_o< quack!");
             t0 = performance.now();
         }
