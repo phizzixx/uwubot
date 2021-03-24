@@ -527,9 +527,12 @@ client.on('message', message =>{
                     }
                     
                     if(duelDict.has(message.author.id)){
-                        duelDict.set(message.author.id, duelDict.get(message.author.id)-1);
+                        list = duelDict.get(message.author.id).split(' ');
+                        string = (parseInt(list[0]) + ' ' + (parseInt(list[1])+1));
+                        duelDict.set(message.author.id, string)
                     } else {
-                        duelDict.set(message.author.id, -1);
+                        string = (0 + ' ' + 1);
+                        duelDict.set(message.author.id, string);
                     }
                 }
     
