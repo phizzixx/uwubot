@@ -523,7 +523,7 @@ client.on('message', message =>{
                         jailedUser.roles.add(myRole);
                         jailedUser.roles.add(myRole2);
                     } else {
-                        message.reply("You shot too early! You lose! -1 point");
+                        message.reply("You shot too early! You lose!");
                     }
                     
                     if(duelDict.has(message.author.id)){
