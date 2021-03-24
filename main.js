@@ -585,10 +585,7 @@ client.on('message', message =>{
             keys = Array.from(duelDict.keys());
             wins = [];
             losses = [];
-            for(var i = 0; i < 5; i++){
-                if (keys.length < i+1){
-                    break;
-                }
+            for(var i = 0; i < keys.length; i++){
                 uid = keys[i];
                 list = duelDict.get(uid).split(' ');
                 wins[i] = list[0];
