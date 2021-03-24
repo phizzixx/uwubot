@@ -517,9 +517,17 @@ client.on('message', message =>{
                         duelDict.set(loser, string);
                     }
                 } else {
+                    if(message.author.id == challenger){
+                        winner = challenged;
+                        loser = challenger;
+                    } else {
+                        winner = challenger;
+                        loser = challenged;
+                    }
+                    
                     if(jailDuel){
                         message.reply("You shot too early! You lose and have been put in jail.")
-                        jailedUser = message.guild.members.cache.get(message.author.id);
+                        jailedUser = message.guild.members.cache.get(loser);
                         jailedUser.roles.add(myRole);
                         jailedUser.roles.add(myRole2);
                     } else {
@@ -527,12 +535,19 @@ client.on('message', message =>{
                     }
                     
                     if(duelDict.has(message.author.id)){
-                        list = duelDict.get(message.author.id).split(' ');
+                        list = duelDict.get(loser).split(' ');
                         string = (parseInt(list[0]) + ' ' + (parseInt(list[1])+1));
-                        duelDict.set(message.author.id, string)
+                        duelDict.set(loser, string)
+
+                        list = duelDict.get(winner).split(' ');
+                        string = ((parseInt(list[0])+1) + ' ' + (parseInt(list[1])));
+                        duelDict.set(winner, string);
                     } else {
+                        string = (1 + ' ' + 0);
+                        duelDict.set(winner, string);
+                        
                         string = (0 + ' ' + 1);
-                        duelDict.set(message.author.id, string);
+                        duelDict.set(loser, string);
                     }
                 }
     
