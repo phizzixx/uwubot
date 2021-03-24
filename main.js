@@ -497,7 +497,7 @@ client.on('message', message =>{
                         jailedUser.roles.add(myRole);
                         jailedUser.roles.add(myRole2);
                     } else {
-                        message.channel.send('Congratulations <@' + winner + '>! You have won! +1 point');
+                        message.channel.send('Congratulations <@' + winner + '>! You have won!');
                     }
 
                     if(duelDict.has(winner)){
