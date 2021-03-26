@@ -256,7 +256,7 @@ client.on('message', message =>{
             })
             break;
         case 'bangoptions':
-            message.reply("shoot, bang, kill, choke, kachow, attack, blam, cook, drown, belt, redshell");
+            message.reply("shoot, bang, kill, choke, kachow, attack, blam, cook, drown, belt, redshell, tenderize");
             break;
         case 'shoot':
         case 'kill':
@@ -267,6 +267,7 @@ client.on('message', message =>{
         case 'cook':
         case 'drown':
         case 'belt':
+        case 'tenderize':
         case 'redshell':
         case 'bang':
             shoot(message);
