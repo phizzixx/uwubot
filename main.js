@@ -256,7 +256,7 @@ client.on('message', message =>{
             })
             break;
         case 'bangoptions':
-            message.reply("shoot, bang, kill, choke, kachow, attack, blam, cook, drown, belt");
+            message.reply("shoot, bang, kill, choke, kachow, attack, blam, cook, drown, belt, redshell");
             break;
         case 'shoot':
         case 'kill':
@@ -267,6 +267,7 @@ client.on('message', message =>{
         case 'cook':
         case 'drown':
         case 'belt':
+        case 'redshell':
         case 'bang':
             shoot(message);
             break;
@@ -682,7 +683,7 @@ client.on('message', message =>{
             helpString += "\n**%pet** - pet the bot\n**%finalroulette** - proceed with caution. if you lose to this, you will be kicked\n**%ud [word]** - retrieves a definition from urban dictionary";
             helpString += "\n**%example [word]** - retrieves an example sentence from urban dictionary\n**%random** - returns a random definition from urban dictionary'\n**%shoot/bang** - shoots the duck (if there is one)";
             helpString += "\n**%score *[user]*** - shows the score of the user or a mentioned user\n**%scoreboard** - shows the top 10 duck hunt scores\n**%times *[user]*** - shows the fastest and slowest duck hunt times of the user or a mentioned user"
-            helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user\n**bangoptions** - shows the shooting commands available for duckhunt\n**%addqueue [user]** - adds a user to the jackbox queue";
+            helpString += "\n**%timeboard** - shows the top 5 fastest and longest duck hunt times\n**%resetscore [user]** - resets the duck hunt score of the mentioned user\n**%bangoptions** - shows the shooting commands available for duckhunt\n**%addqueue [user]** - adds a user to the jackbox queue";
             helpString += "\n**%removequeue [user]** - removes a user from the jackbox queue\n**%rotate** - rotates the jackbox queue\n**%list/queue** - lists the jackbox queue\n**%randomize** - randomizes the jackbox list";
             helpString += "\n**%trial [user]** - place a user on trial\n**%duel [user]** - engage in a duel with another user\n**%jailduel [user]** - engage in a duel, but be sent to jail if you lose";
             helpString += "\n**%duelscore *[user]*** - shows the duel wins and losses of the user or mentioned user\n**%duelboard *** - shows the the top 5 duel winners and losers";
