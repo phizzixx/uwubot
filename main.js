@@ -840,6 +840,9 @@ function shoot(message){
             missedNum = getRandomInt(100);
             gainedPts = 1;
             if(missedNum > 7){
+                if(message.author.id == '769030302357127189'){
+                    duckType = 'emerald';
+                }
                 if(duckType == 'silver'){
                     message.reply("You shot a **silver** duck! \\\\_x< | +5 points (" + totalTime + " seconds)");
                     gainedPts = 5;
