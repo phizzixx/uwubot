@@ -670,6 +670,9 @@ client.on('message', message =>{
             }
             message.channel.send(msg);
             break;
+        case 'sadge':
+            message.channel.send("<:Sadgemo:810235730403524618>");
+            break;
         case 'pet':
             let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
             petNum = getRandomInt(16)-1;
