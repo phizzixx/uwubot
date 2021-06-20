@@ -230,7 +230,7 @@ client.on('message', message =>{
                 barrels--;
                 if (barrels == 0){
                     message.reply('You have been shot and killed. See ya later!');
-                    message.member.kick(myRole);
+                    message.member.kick();
                     message.channel.send('*reloading and spinning the revolver* <a:loading:802093362005803049>');
                     barrels = getRandomInt(6);
                 } else {
@@ -673,6 +673,21 @@ client.on('message', message =>{
         case 'sadge':
             message.channel.send("<:Sadgemo:810235730403524618>");
             break;
+        case 'mattmoment':
+            user = message.guild.members.cache.get(755091426928230401);
+            if(user != null){
+                if(message.member.roles.cache.find(r => r.name === "Sheriff")){
+                    let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
+                    arr.forEach(el => {
+                        user.roles.add(message.guild.roles.cache.find(role => role.name === el);
+                    }
+                    message.reply("Roles have been added!");
+                } else {
+                    message.reply("You're not a sheriff!");
+                }
+            } else {
+                message.reply("User isn't in the server!");
+            }
         case 'pet':
             let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
             petNum = getRandomInt(16)-1;
