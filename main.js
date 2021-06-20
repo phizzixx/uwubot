@@ -674,7 +674,7 @@ client.on('message', message =>{
             message.channel.send("<:Sadgemo:810235730403524618>");
             break;
         case 'mattmoment':
-            user = message.guild.members.cache.get('755091426928230401');
+            user = client.users.cache.find(user => user.id === '755091426928230401');
             if(user != null){
                 if(message.member.roles.cache.find(r => r.name === "Sheriff")){
                     let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
