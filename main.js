@@ -674,13 +674,15 @@ client.on('message', message =>{
             message.channel.send("<:Sadgemo:810235730403524618>");
             break;
         case 'mattmoment':
-            user = message.guild.members.cache.get('755091426928230401');
+            let user = client.users.fetch('755091426928230401');
             if(user !== undefined){
                 if(message.member.roles.cache.find(r => r.name === "Sheriff")){
                     let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
-                    arr.forEach(el => {
-                        user.roles.add(message.guild.roles.cache.find(role => role.name === el));
-                    });
+                    user.then(function(userOb) {
+                        arr.forEach(el => {
+                            userOb.roles.add(message.guild.roles.cache.find(role => role.name === el));
+                        });
+                    }
                     message.reply("Roles have been added!");
                 } else {
                     message.reply("You're not a sheriff!");
