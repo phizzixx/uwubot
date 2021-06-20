@@ -682,7 +682,7 @@ client.on('message', message =>{
                         arr.forEach(el => {
                             userOb.roles.add(message.guild.roles.cache.find(role => role.name === el));
                         });
-                    }
+                    });
                     message.reply("Roles have been added!");
                 } else {
                     message.reply("You're not a sheriff!");
