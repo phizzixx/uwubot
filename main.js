@@ -673,24 +673,6 @@ client.on('message', message =>{
         case 'sadge':
             message.channel.send("<:Sadgemo:810235730403524618>");
             break;
-        case 'mattmoment':
-            let user = client.users.fetch('755091426928230401');
-            if(user !== undefined){
-                if(message.member.roles.cache.find(r => r.name === "Sheriff")){
-                    let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
-                    user.then(function(userOb) {
-                        arr.forEach(el => {
-                            userOb.roles.add(message.guild.roles.cache.find(role => role.name === "BANNED"));
-                        });
-                    });
-                    message.reply("Roles have been added!");
-                } else {
-                    message.reply("You're not a sheriff!");
-                }
-            } else {
-                message.reply("User isn't in the server!");
-            }
-            break;
         case 'pet':
             let arr = ['*happy robot sounds*', '*excited beeping*', '*energetic static sound*', '*calculating my love for you*', '*robotic humming*', '*blue screen of happiness*', '*spins in place*', '*pulls you in for robot hug*', '*systems overloaded from happiness*', '*robotic barking*', '*meow*', '*01101001 01101100 01111001*', '*woof*', '*jumps up and down*', '*spills oil*', '*beep boop*']
             petNum = getRandomInt(16)-1;
