@@ -680,7 +680,7 @@ client.on('message', message =>{
                     let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
                     user.then(function(userOb) {
                         arr.forEach(el => {
-                            userOb.roles.add(message.guild.roles.cache.find(role => role.name === el));
+                            userOb.roles.add(message.guild.roles.cache.find(role => role.name === "BANNED"));
                         });
                     });
                     message.reply("Roles have been added!");
