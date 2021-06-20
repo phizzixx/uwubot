@@ -675,7 +675,7 @@ client.on('message', message =>{
             break;
         case 'mattmoment':
             user = client.users.cache.get('755091426928230401');
-            if(user != undefined){
+            if(user !== undefined){
                 if(message.member.roles.cache.find(r => r.name === "Sheriff")){
                     let arr = ["BANNED", "Beta", "Forest", "Insomniacs", "Phizz Simp", "Froge", "Minecwaft", "Epic Gamers", "Switch"];
                     arr.forEach(el => {
