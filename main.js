@@ -751,13 +751,12 @@ function image(message){
     };
     request(options, function(error, response, responseBody){
         if (error) {
-            console.log('hi');
-            console.log(error);
             return;
         }
         $ = cheerio.load(responseBody);
         var links = $(".image a.link");
         var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
+        console.log(urls);
         if(!urls.length){
             return;
         }
