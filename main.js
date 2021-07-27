@@ -756,11 +756,10 @@ function image(message){
         $ = cheerio.load(responseBody);
         var links = $(".image a.link");
         var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
-        console.log(urls);
         if(!urls.length){
             return;
         }
-        message.channel.send(urls[Math.floor(Math.random() * urls.length)]);
+        message.channel.send('https://cdn.vox-cdn.com/thumbor/oFGuiTBJrDBPPz3G_C8ewGzq-dE=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/assets/4867012/Macaca_nigra_self-portrait__rotated_and_cropped_.jpg');
     });
 }
 
