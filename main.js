@@ -154,7 +154,6 @@ client.on('message', message =>{
             }
             break;
         case 'monke':
-            console.log('hi');
             image(message);
             break;
         case 'jail':
@@ -742,6 +741,7 @@ client.on('message', message =>{
 })
 
 function image(message){
+    console.log('hi');
     var options = {
         url : "http://results.dogpile.com/serp?qc=images&q=" + "monkey",
         method: "GET",
