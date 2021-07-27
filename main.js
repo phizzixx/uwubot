@@ -154,6 +154,7 @@ client.on('message', message =>{
             }
             break;
         case 'monke':
+            console.log('hi');
             image(message);
             break;
         case 'jail':
