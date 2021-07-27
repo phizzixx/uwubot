@@ -741,7 +741,6 @@ client.on('message', message =>{
 })
 
 function image(message){
-    console.log('hi');
     var options = {
         url : "http://results.dogpile.com/serp?qc=images&q=" + "monkey",
         method: "GET",
@@ -752,6 +751,8 @@ function image(message){
     };
     request(options, function(error, response, responseBody){
         if (error) {
+            console.log('hi');
+            console.log('error');
             return;
         }
         $ = cheerio.load(responseBody);
