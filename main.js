@@ -752,7 +752,7 @@ function image(message){
     request(options, function(error, response, responseBody){
         if (error) {
             console.log('hi');
-            console.log('error');
+            console.log(error);
             return;
         }
         $ = cheerio.load(responseBody);
